@@ -65,6 +65,7 @@
 // revert to previous changes made in that day or on the any day they want to
 
 use clap::{Parser, Subcommand};
+use webbrowser;
 
 #[derive(Parser)]
 #[command(name = "adof")]
@@ -115,6 +116,9 @@ enum Commands {
 
     /// Uninstall Adof
     Uninstall,
+
+    /// Sponsor Me
+    Sponsor,
 }
 
 fn main() {
@@ -158,6 +162,10 @@ fn main() {
 
         Commands::Uninstall => {
             println!("Uninstalling Adof.");
+        }
+
+        Commands::Sponsor => {
+            let _  = webbrowser::open("https://github.com/sponsors/fnabinash");
         }
     }
 }
