@@ -2,6 +2,14 @@
 name = "adof"
 version = "0.1.0"
 edition = "2021"
+authors = ["Abinash S. <fnabinash@gmail.com>"] 
+license = "MIT"
+description = "ADOF - An Automatic Dot-files Organizer Friend"
+readme = "README.md"
+homepage = "https://github.com/fnabinash/adof"
+repository = "https://github.com/fnabinash/adof"
+keywords = ["dotfiles", "adof", "dotfile-manager", "vim", "neovim"]
+categories = ["command-line-utilities"]
 
 [dependencies]
 clap = { version = "4.5.20", features = ["derive"] }

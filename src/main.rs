@@ -1,7 +1,7 @@
 // Init - init the tool and find all the dot files and copy to the .adof folder
 //      - process
 //          - when running the init command it will open a window like fzf with left side containing
-//          the files name and path and right side shows the preview with synatx highlight.
+//          the files name and path and right side shows the preview with syntax highlight.
 //          - it does not pull every single file, rather it only pulls the files that it finds as
 //          dot files or config files then you can use your `tab` to select files and use `arrows`
 //          to move between files after selecting all files hit `enter` to complete the
@@ -13,24 +13,24 @@
 //          in right sight the file contents with syntax highlights then you can use `tab` to
 //          select files and `enter` to complete the process
 //
-// Link - link to a github Repo
-//      - only link the repo do not push anything untill the push command is not triggeered
+// Link - link to a GitHub Repo
+//      - only link the repo do not push anything until the push command is not triggered
 //
-// push - push the changes to github Repo with commit message that include
+// push - push the changes to GitHub Repo with commit message that include
 //      - process
 //          - when the user runs the push command first print a summary in a table format with file
 //          name, then changes means how many lines added and deleted.
-//          - then ask for comformation to push or not
-//          - if user says yes then push to github with commit message that contains
+//          - then ask for conformation to push or not
+//          - if user says yes then push to GitHub with commit message that contains
 //              - date
 //              - time
 //              - files that are changed with how many lines added and deleted
 //
-// unlink - unlink the github Repo
+// unlink - unlink the GitHub Repo
 //      - process
 //          - ask the user for conformation to unlink or not
 //
-// deploy - copy all the dot files from github and store in the local machine at perfect places
+// deploy - copy all the dot files from GitHub and store in the local machine at perfect places
 //      - process
 //          - when user runs the deploy command first fetch the files and shows a summary of all
 //          files like
@@ -42,17 +42,17 @@
 //          - after this if user says yes then proceed and save files where the location it
 //          indicated
 //          - when a user deploy from other GitHub repo do not link it only deploy, only link when
-//          user runs the deploy commmand
+//          user runs the deploy command
 //          - then do a small animation to celebrate🎉
 //
 // uninstall - remove adof from your machine, while uninstalling first check if there is untracked
 // or uncommitted changes or not if not then uninstall if yes then ask for permission to forcefully
 // uninstall.
 //
-// log - log the last changes thay made
+// log - log the last changes they made
 //      - parameters
-//          - date - list all the changes happend that day
-//          - files - list the changes that happend to that file in perticular time
+//          - date - list all the changes happened that day
+//          - files - list the changes that happened to that file in particular time
 //          - number - list that nth changes happened to that whole .adof folder
 //          - also they can give additional parameters like 1 or 2 or all or today to list the
 //          changes they made
@@ -68,7 +68,9 @@ use clap::{Parser, Subcommand};
 
 #[derive(Parser)]
 #[command(name = "adof")]
-#[command(about = "ADOF - An Atomatic Dot-files Organizer Friend", long_about = None)]
+#[command(version = "v0.1.0")]
+#[command(author = "Abinash S. <fnabinash@gmail.com>")]
+#[command(about = "ADOF - An Automatic Dot-files Organizer Friend", long_about = None)]
 struct Cli {
     #[command(subcommand)]
     command: Commands,
@@ -76,16 +78,13 @@ struct Cli {
 
 #[derive(Subcommand)]
 enum Commands {
-    /// Get the latest version
-    Version,
-
     /// Initialize Adof in your system
     Init,
 
     /// Manually add any files you want to keep track of
     Add,
 
-    /// Link to a GitHub repo to store your dotfiles
+    /// Link to a GitHub repo to store your dot files
     Link {
         /// Link of the GitHub repo
         link: String,
@@ -97,7 +96,7 @@ enum Commands {
     /// Got logs of latest changes
     Log,
 
-    /// Get latest commits from GitHUb
+    /// Get latest commits from GitHub
     Commits {
         /// Get the last nth commits
         #[arg(default_value = "1")]
@@ -122,10 +121,6 @@ fn main() {
     let cli = Cli::parse();
 
     match &cli.command {
-        Commands::Version => {
-            println!("adof v0.1.0");
-        }
-
         Commands::Init => {
             println!("Initializing adof.");
         }
