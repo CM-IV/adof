@@ -13,4 +13,5 @@ categories = ["command-line-utilities"]
 
 [dependencies]
 clap = { version = "4.5.20", features = ["derive"] }
+glob = "0.3.1"
 webbrowser = "1.0.2"

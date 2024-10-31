@@ -13,6 +13,8 @@
 //          in right sight the file contents with syntax highlights then you can use `tab` to
 //          select files and `enter` to complete the process
 //
+// Remove - you can also remove files if you want to
+//
 // Link - link to a GitHub Repo
 //      - only link the repo do not push anything until the push command is not triggered
 //
@@ -66,6 +68,9 @@
 
 use clap::{Parser, Subcommand};
 use webbrowser;
+
+pub mod commands;
+use commands::init;
 
 #[derive(Parser)]
 #[command(name = "adof")]
@@ -126,7 +131,7 @@ fn main() {
 
     match &cli.command {
         Commands::Init => {
-            println!("Initializing adof.");
+            init::init();
         }
 
         Commands::Add => {
@@ -165,7 +170,7 @@ fn main() {
         }
 
         Commands::Sponsor => {
-            let _  = webbrowser::open("https://github.com/sponsors/fnabinash");
+            let _ = webbrowser::open("https://github.com/sponsors/fnabinash");
         }
     }
 }
