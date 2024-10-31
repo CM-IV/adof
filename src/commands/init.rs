@@ -9,7 +9,7 @@ pub fn init() {
     let found_dotfiles = find_dotfiles();
     let selected_dotfiles = show_them_in_fzf(found_dotfiles);
     let adof_dir_path = create_adof_dir();
-    let _created_adof_dotfiles = create_selected_dotfiles(&selected_dotfiles, &adof_dir_path);
+    create_selected_dotfiles(&selected_dotfiles, &adof_dir_path);
 }
 
 fn find_dotfiles() -> Vec<PathBuf> {
