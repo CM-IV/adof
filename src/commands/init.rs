@@ -9,7 +9,7 @@ pub fn init() {
     let found_dotfiles = find_dotfiles();
     let selected_dotfiles = show_them_in_fzf(found_dotfiles);
     let adof_dir_path = create_adof_dir();
-    let created_adof_dotfiles = create_selected_dotfiles(&selected_dotfiles, &adof_dir_path);
+    let _created_adof_dotfiles = create_selected_dotfiles(&selected_dotfiles, &adof_dir_path);
 }
 
 fn find_dotfiles() -> Vec<PathBuf> {
@@ -50,7 +50,7 @@ fn find_dotfiles() -> Vec<PathBuf> {
     found_files
 }
 
-fn show_them_in_fzf(found_dotfiles: Vec<PathBuf>) -> String {
+fn show_them_in_fzf(found_dotfiles: Vec<PathBuf>) -> Vec<String> {
     let files_input = found_dotfiles
         .iter()
         .map(|file| file.clone().into_os_string().into_string().unwrap())
@@ -74,7 +74,12 @@ fn show_them_in_fzf(found_dotfiles: Vec<PathBuf>) -> String {
 
     let output = child.wait_with_output().expect("Failed to read fzf output");
 
-    let selected_files = String::from_utf8_lossy(&output.stdout).trim().to_string();
+    let selected_files = String::from_utf8_lossy(&output.stdout)
+        .trim()
+        .to_string()
+        .lines()
+        .map(|file| file.to_string())
+        .collect::<Vec<String>>();
 
     if selected_files.is_empty() {
         println!("No file selected.");
@@ -90,11 +95,23 @@ fn create_adof_dir() -> String {
     adof_dir
 }
 
-fn create_selected_dotfiles(selected_dotfiles: &str, adof_dir_path: &str) {
-    let home_dir = env::var("HOME").expect("Failed to retrieve home dir.").to_string();
-    let files_to_create = selected_dotfiles.lines().map(|file| file.replace(&home_dir, "")).collect::<Vec<String>>();
+fn create_selected_dotfiles(selected_dotfiles: &Vec<String>, adof_dir_path: &str) {
+    let home_dir = env::var("HOME")
+        .expect("Failed to retrieve home dir.")
+        .to_string();
 
-    files_to_create.iter().for_each(|file| { std::fs::File::create(file).unwrap(); });
+    let files_to_create = selected_dotfiles
+        .iter()
+        .map(|file| file.replace(&home_dir, adof_dir_path))
+        .collect::<Vec<String>>();
+
+    files_to_create.iter().for_each(|file| {
+        std::fs::File::create(file).unwrap();
+    });
+
+    (0..files_to_create.len()).for_each(|i| {
+        std::fs::copy(&selected_dotfiles[i], &files_to_create[i]).unwrap();
+    })
 }
 
 // fn establish_symlinks() {}
