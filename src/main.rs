@@ -76,6 +76,7 @@ use clap::{Parser, Subcommand};
 
 pub mod commands;
 pub mod database;
+pub mod git;
 
 use commands::init;
 

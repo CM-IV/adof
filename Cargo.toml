@@ -12,6 +12,7 @@ keywords = ["dotfiles", "adof", "dotfile-manager", "vim", "neovim"]
 categories = ["command-line-utilities"]
 
 [dependencies]
+chrono = "0.4.38"
 clap = { version = "4.5.20", features = ["derive"] }
 git2 = "0.19.0"
 glob = "0.3.1"

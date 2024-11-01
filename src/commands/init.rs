@@ -4,10 +4,9 @@ use std::path::{self, PathBuf};
 use std::process::{Command, Stdio};
 
 use glob::glob;
-use git2::{IndexAddOption, Repository};
 
 use adof::{get_adof_dir, get_home_dir};
-use crate::database::add;
+use crate::{database::add, git::init_git};
 
 const FILE_PATTERN: [&str; 17] = [
     ".bashrc",
@@ -121,13 +120,4 @@ fn create_copy_selected_files(selected_files: &Vec<String>) {
         fs::copy(&selected_files[i], &files_to_create[i]).unwrap();
         add::add_files_to_database(&selected_files[i], &files_to_create[i]);
     })
-}
-
-fn init_git() {
-    let adof_dir = get_adof_dir();
-
-    let repo = Repository::init(adof_dir).unwrap();
-    let mut index = repo.index().unwrap();
-    index.add_all(["*"].iter(), IndexAddOption::DEFAULT, None).unwrap();
-    index.write().unwrap();
 }
