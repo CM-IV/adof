@@ -1,7 +1,3 @@
-// Init - init the tool and find all the dot files and copy to the .adof folder
-//      - process
-//          - init the git repo
-//
 // Add - after initialization, users can easily search and add any files they want to track
 //      - process
 //          - when running `add` command it opens a window like fzf in left side file with path and
@@ -78,11 +74,11 @@ pub mod commands;
 pub mod database;
 pub mod git;
 
-use commands::init;
+use commands::{add, init};
 
 #[derive(Parser)]
 #[command(name = "adof")]
-#[command(version = "v0.1.0")]
+#[command(version = "v0.1.1")]
 #[command(author = "Abinash S. <fnabinash@gmail.com>")]
 #[command(about = "ADOF - An Automatic Dot-files Organizer Friend", long_about = None)]
 struct Cli {
@@ -97,6 +93,9 @@ enum Commands {
 
     /// Manually add any files you want to keep track of
     Add,
+
+    /// Remove files you does not want to keep track of
+    Remove,
 
     /// Link to a GitHub repo to store your dot files
     Link {
@@ -143,7 +142,11 @@ fn main() {
         }
 
         Commands::Add => {
-            println!("Manually adding new files.");
+            add::add();
+        }
+
+        Commands::Remove => {
+            println!("Remove files from .adof");
         }
 
         Commands::Link { link } => {

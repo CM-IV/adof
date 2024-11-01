@@ -15,6 +15,5 @@ pub fn init_git() {
 
 fn get_repo() -> Repository {
     let adof_dir = get_adof_dir();
-    let repo = Repository::open(adof_dir).unwrap();
-    repo
+    Repository::open(adof_dir).unwrap()
 }

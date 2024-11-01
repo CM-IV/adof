@@ -89,7 +89,7 @@ fn commit_changes(commit_message: &str) {
 
     let signature = Signature::now(&name, &email).unwrap();
 
-    let commit_id = if let Some(parent) = parent_commit {
+    if let Some(parent) = parent_commit {
         repo.commit(
             Some("HEAD"),
             &signature,
@@ -110,6 +110,4 @@ fn commit_changes(commit_message: &str) {
         )
         .unwrap()
     };
-
-    println!("Committed changes with message: {}", commit_message);
 }
