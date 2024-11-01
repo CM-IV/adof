@@ -15,6 +15,14 @@
 //
 // Remove - you can also remove files if you want to
 //
+// update - manually update
+//
+// auto_update - to automatically update when there is changes
+//      - args
+//          - then can time limit like 1 hour or 1 min or 10 min to periodically check for updates
+//          and when there is upate sync the changes
+//          - also have option to disable the auto_update if they want to
+//
 // Link - link to a GitHub Repo
 //      - only link the repo do not push anything until the push command is not triggered
 //
