@@ -114,5 +114,3 @@ fn create_copy_selected_files(selected_files: &Vec<String>) {
         add_files_to_database(&selected_files[i], &files_to_create[i]);
     })
 }
-
-// fn establish_symlinks() {}
