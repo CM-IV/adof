@@ -1,11 +1,6 @@
 // Init - init the tool and find all the dot files and copy to the .adof folder
 //      - process
-//          - when running the init command it will open a window like fzf with left side containing
-//          the files name and path and right side shows the preview with syntax highlight.
-//          - it does not pull every single file, rather it only pulls the files that it finds as
-//          dot files or config files then you can use your `tab` to select files and use `arrows`
-//          to move between files after selecting all files hit `enter` to complete the
-//          initialization process
+//          - init the git repo
 //
 // Add - after initialization, users can easily search and add any files they want to track
 //      - process
@@ -80,6 +75,8 @@
 use clap::{Parser, Subcommand};
 
 pub mod commands;
+pub mod database;
+
 use commands::init;
 
 #[derive(Parser)]

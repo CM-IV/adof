@@ -4,8 +4,10 @@ use std::path::{self, PathBuf};
 use std::process::{Command, Stdio};
 
 use glob::glob;
+use git2::{IndexAddOption, Repository};
 
-use super::*;
+use adof::{get_adof_dir, get_home_dir};
+use crate::database::add;
 
 const FILE_PATTERN: [&str; 17] = [
     ".bashrc",
@@ -34,6 +36,12 @@ pub fn init() {
     create_adof_dir();
 
     create_copy_selected_files(&selected_files);
+    init_git();
+}
+
+fn create_adof_dir() {
+    let adof_dir = get_adof_dir();
+    fs::create_dir_all(&adof_dir).expect("failed to create adof dir.");
 }
 
 fn find_files() -> Vec<PathBuf> {
@@ -111,6 +119,15 @@ fn create_copy_selected_files(selected_files: &Vec<String>) {
     (0..files_to_create.len()).for_each(|i| {
         create_file(&files_to_create[i]);
         fs::copy(&selected_files[i], &files_to_create[i]).unwrap();
-        add_files_to_database(&selected_files[i], &files_to_create[i]);
+        add::add_files_to_database(&selected_files[i], &files_to_create[i]);
     })
+}
+
+fn init_git() {
+    let adof_dir = get_adof_dir();
+
+    let repo = Repository::init(adof_dir).unwrap();
+    let mut index = repo.index().unwrap();
+    index.add_all(["*"].iter(), IndexAddOption::DEFAULT, None).unwrap();
+    index.write().unwrap();
 }
