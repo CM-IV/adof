@@ -5,8 +5,8 @@ use std::process::{Command, Stdio};
 
 use glob::glob;
 
-use adof::{get_adof_dir, get_home_dir};
 use crate::{database::add, git::init_git};
+use adof::{get_adof_dir, get_home_dir};
 
 const FILE_PATTERN: [&str; 17] = [
     ".bashrc",

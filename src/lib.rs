@@ -9,4 +9,3 @@ pub fn get_adof_dir() -> String {
     let adof_dir = format!("{}/{}", home_dir, ".adof");
     adof_dir
 }
-
