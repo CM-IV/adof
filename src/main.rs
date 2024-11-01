@@ -1,9 +1,3 @@
-// Add - after initialization, users can easily search and add any files they want to track
-//      - process
-//          - when running `add` command it opens a window like fzf in left side file with path and
-//          in right sight the file contents with syntax highlights then you can use `tab` to
-//          select files and `enter` to complete the process
-//
 // Remove - you can also remove files if you want to
 //
 // update - manually update
@@ -64,9 +58,6 @@
 // thorough out the day with time then on the next day commit the changes with a squash merge with
 // all commits props like date time and the files that are changed, also if they can they can
 // revert to previous changes made in that day or on the any day they want to
-//
-// idea - create a json file to store a key-value pair in key the location of original file and in
-// value the location of copied file
 
 use clap::{Parser, Subcommand};
 
