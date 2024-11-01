@@ -14,7 +14,7 @@ pub fn commit() {
 
 fn get_current_date_and_time() -> String {
     let current_time = Local::now().naive_local();
-    let formatted_current_time = current_time.format("%a,%e %b %Y%l:%M %p");
+    let formatted_current_time = current_time.format("%a,%e %b %Y %l:%M %p");
     formatted_current_time.to_string()
 }
 

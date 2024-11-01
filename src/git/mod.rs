@@ -10,7 +10,7 @@ pub mod merge;
 pub fn init_git() {
     let adof_dir = get_adof_dir();
     Repository::init(adof_dir).unwrap();
-    add::add()
+    add::git_add()
 }
 
 fn get_repo() -> Repository {

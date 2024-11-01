@@ -3,12 +3,14 @@ use std::fs;
 use glob::glob;
 
 use adof::get_home_dir;
-use crate::database::add;
+use crate::database::add::add_files_to_database;
+use crate::git::add::git_add;
 use super::*;
 
 pub fn add() {
     let files_to_add = get_files_to_add();
     create_backup_files(&files_to_add);
+    git_add();
 }
 
 fn get_files_to_add() -> Vec<String> {
@@ -35,6 +37,6 @@ fn create_backup_files(files_to_add: &Vec<String>) {
     (0..files_to_add.len()).for_each(|i| {
         let backup_file = create_backup_file(&files_to_add[i]);
         fs::copy(&files_to_add[i], &backup_file).unwrap();
-        add::add_files_to_database(&files_to_add[i], &backup_file);
+        add_files_to_database(&files_to_add[i], &backup_file);
     })
 }
