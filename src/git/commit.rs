@@ -1,14 +1,14 @@
-use std::collections::HashMap;
+use std::collections::HashSet;
 
 use chrono::Local;
-use git2::{DiffOptions, Signature};
+use git2::{Delta, DiffOptions, Signature};
 
 use super::*;
 
 pub fn commit() {
     let current_time = get_current_date_and_time();
-    let change_log = get_change_logs();
-    let commit_message = get_commit_message(&current_time, &change_log);
+    let each_file_status = get_change_logs();
+    let commit_message = get_commit_message(&current_time, &each_file_status);
     commit_changes(&commit_message);
 }
 
@@ -35,36 +35,83 @@ fn get_change_logs() -> String {
         .diff_tree_to_index(tree.as_ref(), Some(&index), Some(&mut diff_options))
         .unwrap();
 
-    let mut file_changes: HashMap<String, (usize, usize, usize)> = HashMap::new();
+    let mut added_files = HashSet::new();
+    let mut removed_files = HashSet::new();
+    let mut modified_files = HashSet::new();
 
     diff.print(git2::DiffFormat::Patch, |delta, _hunk, line| {
         if let Some(file_path) = delta.new_file().path() {
             let file_name = file_path.to_string_lossy().to_string();
-            let entry = file_changes.entry(file_name).or_insert((0, 0, 0));
 
-            match line.origin() {
-                '+' => entry.0 += 1,
-                '-' => entry.1 += 1,
-                ' ' => entry.2 += 1,
+            match delta.status() {
+                Delta::Added => {
+                    let mut file_changes = ("Files Added", file_name, 0, 0, 0);
+
+                    match line.origin() {
+                        '+' => file_changes.2 += 1,
+                        _ => {}
+                    }
+
+                    added_files.insert(file_changes);
+                }
+
+                Delta::Deleted => {
+                    let mut file_changes = ("Filed Removed", file_name, 0, 0, 0);
+
+                    match line.origin() {
+                        '-' => file_changes.3 += 1,
+                        _ => {}
+                    }
+
+                    removed_files.insert(file_changes);
+                }
+
+                Delta::Modified => {
+                    let mut file_changes = ("Files Modified", file_name, 0, 0, 0);
+
+                    match line.origin() {
+                        '+' => file_changes.2 += 1,
+                        '-' => file_changes.3 += 1,
+                        ' ' => file_changes.4 += 1,
+                        _ => {}
+                    }
+
+                    modified_files.insert(file_changes);
+                }
                 _ => {}
             }
         }
+
         true
     })
     .unwrap();
 
-    let mut change_log = Vec::new();
+    let change_log = vec![added_files, removed_files, modified_files];
 
-    for (file, (added, removed, modified)) in file_changes {
-        let message = format!("{} +{} -{} ~{}", file, added, removed, modified);
-        change_log.push(message);
-    }
+    let mut file_logs = Vec::new();
 
-    change_log.join("\n")
+    change_log.iter().for_each(|file_changes| {
+        if file_changes.len() != 0 {
+            file_changes.iter().for_each(|file_change| {
+                let message = format!(
+                    "{}: {}\n\t- {} +{} -{} ~{}",
+                    file_change.0,
+                    file_changes.len(),
+                    file_change.1,
+                    file_change.2,
+                    file_change.3,
+                    file_change.4
+                );
+                file_logs.push(message);
+            });
+        }
+    });
+
+    file_logs.join("\n\n")
 }
 
-fn get_commit_message(current_time: &str, change_log: &str) -> String {
-    format!("{}\n\n{}", current_time, change_log)
+fn get_commit_message(current_time: &str, each_file_status: &str) -> String {
+    format!("{}\n\n{}", current_time, each_file_status)
 }
 
 fn commit_changes(commit_message: &str) {
