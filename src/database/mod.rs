@@ -39,7 +39,7 @@ pub fn get_table_struct() -> DataTable {
     table_struct
 }
 
-fn get_copied_file_path_by_key(original_path: &str) -> String {
+fn get_backup_file_path(original_path: &str) -> String {
     let table_struct = get_table_struct();
     let copied_path = table_struct.table.get(original_path).unwrap();
     copied_path.to_owned()

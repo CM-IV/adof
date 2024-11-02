@@ -2,7 +2,7 @@ use std::fs;
 
 use super::*;
 
-pub fn add_files_to_database(original_path: &str, copied_path: &str) {
+pub fn add_files(original_path: &str, copied_path: &str) {
     let database_path = get_database_path();
 
     if std::path::Path::new(&database_path).exists() {

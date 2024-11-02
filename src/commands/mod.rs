@@ -11,6 +11,7 @@ use crate::database::get_table_struct;
 
 pub mod add;
 pub mod init;
+pub mod remove;
 
 fn select_files(found_files: Vec<PathBuf>) -> Vec<String> {
     let found_files = found_files

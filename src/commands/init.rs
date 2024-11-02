@@ -67,6 +67,6 @@ fn create_backup_files(selected_files: &[String]) {
     (0..selected_files.len()).for_each(|i| {
         let backup_file = create_backup_file(&selected_files[i]);
         fs::copy(&selected_files[i], &backup_file).unwrap();
-        add::add_files_to_database(&selected_files[i], &backup_file);
+        add::add_files(&selected_files[i], &backup_file);
     })
 }

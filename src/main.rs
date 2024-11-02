@@ -67,7 +67,7 @@ pub mod commands;
 pub mod database;
 pub mod git;
 
-use commands::{add, init};
+use commands::{add, init, remove};
 
 #[derive(Parser)]
 #[command(name = "adof")]
@@ -139,7 +139,7 @@ fn main() {
         }
 
         Commands::Remove => {
-            println!("Remove files from .adof");
+            remove::remove();
         }
 
         Commands::Link { link } => {
