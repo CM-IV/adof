@@ -1,9 +1,12 @@
-use std::{fs, path::{self, PathBuf}};
-use std::process::{Stdio, Command};
 use std::io::Write;
+use std::process::{Command, Stdio};
+use std::{
+    fs,
+    path::{self, PathBuf},
+};
 
-use adof::{get_adof_dir, get_home_dir};
 use crate::database::get_table_struct;
+use adof::{get_adof_dir, get_home_dir};
 
 pub mod add;
 pub mod init;

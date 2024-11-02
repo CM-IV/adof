@@ -1,5 +1,7 @@
 // Remove - you can also remove files if you want to
 //
+// list - list all the files that .adof is keeping track of
+//
 // update - manually update
 //
 // auto_update - to automatically update when there is changes
