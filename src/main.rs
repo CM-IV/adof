@@ -1,5 +1,3 @@
-// list - list all the files that .adof is keeping track of
-//
 // update - manually update
 //
 // auto_update - to automatically update when there is changes
@@ -65,7 +63,7 @@ pub mod commands;
 pub mod database;
 pub mod git;
 
-use commands::{add, init, remove};
+use commands::{add, init, list, remove};
 
 #[derive(Parser)]
 #[command(name = "adof")]
@@ -87,6 +85,9 @@ enum Commands {
 
     /// Remove files you does not want to keep track of
     Remove,
+
+    /// List all the files you are keeping track of
+    List,
 
     /// Link to a GitHub repo to store your dot files
     Link {
@@ -138,6 +139,10 @@ fn main() {
 
         Commands::Remove => {
             remove::remove();
+        }
+
+        Commands::List => {
+            list::list();
         }
 
         Commands::Link { link } => {
