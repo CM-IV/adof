@@ -9,8 +9,8 @@ pub mod add;
 pub mod remove;
 
 #[derive(Serialize, Deserialize, Debug)]
-struct DataTable {
-    table: HashMap<String, String>,
+pub struct DataTable {
+    pub table: HashMap<String, String>,
 }
 
 impl DataTable {
@@ -32,7 +32,7 @@ fn get_database_path() -> String {
     database_path
 }
 
-fn get_table_struct() -> DataTable {
+pub fn get_table_struct() -> DataTable {
     let database_path = get_database_path();
     let database_contents = fs::read_to_string(&database_path).unwrap();
     let table_struct: DataTable = serde_json::from_str(&database_contents).unwrap();

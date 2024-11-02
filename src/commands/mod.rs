@@ -3,6 +3,7 @@ use std::process::{Stdio, Command};
 use std::io::Write;
 
 use adof::{get_adof_dir, get_home_dir};
+use crate::database::get_table_struct;
 
 pub mod add;
 pub mod init;
@@ -58,4 +59,9 @@ fn create_backup_file(original_file: &str) -> String {
     fs::File::create(&backup_file).unwrap();
 
     backup_file
+}
+
+fn is_file_backedup(original_file: &str) -> bool {
+    let table_struct = get_table_struct();
+    table_struct.table.contains_key(original_file)
 }

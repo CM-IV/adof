@@ -1,4 +1,5 @@
 use std::fs;
+use std::process;
 
 use glob::glob;
 
@@ -9,6 +10,12 @@ use super::*;
 
 pub fn add() {
     let files_to_add = get_files_to_add();
+
+    if files_to_add.is_empty() {
+        println!("files are already exist");
+        process::exit(1);
+    }
+
     create_backup_files(&files_to_add);
     git_add();
 }
@@ -30,7 +37,8 @@ fn get_files_to_add() -> Vec<String> {
         }
     }
 
-    select_files(found_files)
+    let selected_files = select_files(found_files);
+    selected_files.into_iter().filter(|file| !is_file_backedup(file)).collect::<Vec<String>>()
 }
 
 fn create_backup_files(files_to_add: &Vec<String>) {
