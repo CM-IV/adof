@@ -32,7 +32,7 @@ fn print_directory(path: &Path, level: usize, prefix: &str) {
 }
 
 fn print_entry(path: &Path, prefix: &str, is_last: bool, is_dir: bool) {
-    let icon = if is_dir { "📁" } else { "📄" };
+    let icon = if is_dir { "📂" } else { "📄" };
     let connector = if is_last { "└──" } else { "├──" };
     let name = path.file_name().unwrap().to_string_lossy();
 
