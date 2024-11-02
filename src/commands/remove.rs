@@ -1,5 +1,3 @@
-use glob::glob;
-
 use crate::database::remove::remove_files;
 use crate::git::add::git_add;
 
@@ -12,21 +10,12 @@ pub fn remove() {
 }
 
 fn get_files_to_remove() -> Vec<String> {
-    let adof_dir = get_adof_dir();
-    let pattern = format!("{}/**/*", adof_dir);
-
     let mut found_files = Vec::new();
 
-    for entry in glob(&pattern).expect("Failed to read glob pattern") {
-        match entry {
-            Ok(path) => {
-                if path.is_file() {
-                    found_files.push(path);
-                }
-            }
-            Err(e) => eprintln!("Error: {}", e),
-        }
-    }
+    let table_struct = get_table_struct();
+    table_struct.table.values().for_each(|backedup_file| {
+        found_files.push(backedup_file.into());
+    });
 
     select_files(found_files)
 }
