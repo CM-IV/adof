@@ -3,10 +3,12 @@ use std::process;
 
 use glob::glob;
 
-use super::*;
+use adof::get_home_dir;
+
 use crate::database::add::add_files_to_database;
 use crate::git::add::git_add;
-use adof::get_home_dir;
+
+use super::*;
 
 pub fn add() {
     let files_to_add = get_files_to_add();
@@ -38,13 +40,14 @@ fn get_files_to_add() -> Vec<String> {
     }
 
     let selected_files = select_files(found_files);
+
     selected_files
         .into_iter()
         .filter(|file| !is_file_backedup(file))
         .collect::<Vec<String>>()
 }
 
-fn create_backup_files(files_to_add: &Vec<String>) {
+fn create_backup_files(files_to_add: &[String]) {
     (0..files_to_add.len()).for_each(|i| {
         let backup_file = create_backup_file(&files_to_add[i]);
         fs::copy(&files_to_add[i], &backup_file).unwrap();

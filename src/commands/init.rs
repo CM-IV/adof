@@ -3,9 +3,11 @@ use std::path::PathBuf;
 
 use glob::glob;
 
-use super::*;
-use crate::{database::add, git::init_git};
 use adof::{get_adof_dir, get_home_dir};
+
+use crate::{database::add, git::init_git};
+
+use super::*;
 
 const FILE_PATTERNS: [&str; 17] = [
     ".bashrc",

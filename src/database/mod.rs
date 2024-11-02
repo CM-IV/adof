@@ -1,9 +1,9 @@
 use std::collections::HashMap;
 use std::fs;
 
-use adof::get_adof_dir;
-
 use serde::{Deserialize, Serialize};
+
+use adof::get_adof_dir;
 
 pub mod add;
 pub mod remove;

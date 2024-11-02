@@ -5,8 +5,9 @@ use std::{
     path::{self, PathBuf},
 };
 
-use crate::database::get_table_struct;
 use adof::{get_adof_dir, get_home_dir};
+
+use crate::database::get_table_struct;
 
 pub mod add;
 pub mod init;
