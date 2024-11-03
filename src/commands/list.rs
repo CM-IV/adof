@@ -4,10 +4,10 @@ use std::path::Path;
 pub fn list() {
     let path = Path::new("/home/abinash/.adof");
     println!("Root 📦 {}", path.display());
-    print_directory(path, 0, "");
+    print_directory(path, "");
 }
 
-fn print_directory(path: &Path, level: usize, prefix: &str) {
+fn print_directory(path: &Path, prefix: &str) {
     if let Ok(entries) = fs::read_dir(path) {
         let entries: Vec<_> = entries.collect::<Result<_, _>>().unwrap();
         let len = entries.len();
@@ -24,7 +24,7 @@ fn print_directory(path: &Path, level: usize, prefix: &str) {
                 print_entry(&path, prefix, is_last_entry, true);
                 let new_prefix =
                     format!("{}{}", prefix, if is_last_entry { "    " } else { "│   " });
-                print_directory(&path, level + 1, &new_prefix);
+                print_directory(&path, &new_prefix);
             } else if path.is_file() {
                 print_entry(&path, prefix, is_last_entry, false);
             }

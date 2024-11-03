@@ -10,7 +10,7 @@ pub fn remove_files(backup_file: &str) {
     let home_dir = get_home_dir();
     let adof_dir = get_adof_dir();
 
-    fs::remove_file(&backup_file).unwrap();
+    fs::remove_file(backup_file).unwrap();
     let original_file = backup_file.replace(&adof_dir, &home_dir);
 
     let database_path = get_database_path();

@@ -6,9 +6,6 @@
 //          and when there is upate sync the changes
 //          - also have option to disable the auto_update if they want to
 //
-// Link - link to a GitHub Repo
-//      - only link the repo do not push anything until the push command is not triggered
-//
 // push - push the changes to GitHub Repo with commit message that include
 //      - process
 //          - when the user runs the push command first print a summary in a table format with file
@@ -18,10 +15,6 @@
 //              - date
 //              - time
 //              - files that are changed with how many lines added and deleted
-//
-// unlink - unlink the GitHub Repo
-//      - process
-//          - ask the user for conformation to unlink or not
 //
 // deploy - copy all the dot files from GitHub and store in the local machine at perfect places
 //      - process
@@ -146,7 +139,7 @@ fn main() {
         }
 
         Commands::Link { link } => {
-            link::link(&link);
+            link::link(link);
         }
 
         Commands::Push => {
@@ -177,7 +170,7 @@ fn main() {
         }
 
         Commands::Sponsor => {
-            let _ = webbrowser::open("https://github.com/sponsors/fnabinash");
+            webbrowser::open("https://github.com/sponsors/fnabinash").unwrap();
         }
     }
 }
