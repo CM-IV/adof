@@ -6,13 +6,18 @@ use glob::glob;
 use adof::{get_adof_dir, get_home_dir};
 
 use crate::commands::patterns::FILE_PATTERNS;
+use crate::commands::readme::create_readme;
 use crate::{database::add, git::init_git};
 
 use super::*;
 
 pub fn init() {
+    let readme_file_path = create_readme();
+
     let found_files = find_files();
-    let selected_files = select_files(found_files);
+
+    let mut selected_files = select_files(found_files);
+    selected_files.push(readme_file_path);
 
     create_adof_dir();
 
@@ -46,7 +51,7 @@ fn find_files() -> Vec<PathBuf> {
 
 fn create_backup_files(selected_files: &[String]) {
     (0..selected_files.len()).for_each(|i| {
-        let backup_file = create_backup_file(&selected_files[i]);
+        let backup_file = create_file(&selected_files[i]);
         fs::copy(&selected_files[i], &backup_file).unwrap();
         add::add_files(&selected_files[i], &backup_file);
     })

@@ -49,7 +49,7 @@ fn get_files_to_add() -> Vec<String> {
 
 fn create_backup_files(files_to_add: &[String]) {
     (0..files_to_add.len()).for_each(|i| {
-        let backup_file = create_backup_file(&files_to_add[i]);
+        let backup_file = create_file(&files_to_add[i]);
         fs::copy(&files_to_add[i], &backup_file).unwrap();
         add_files(&files_to_add[i], &backup_file);
     })

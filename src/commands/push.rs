@@ -1,5 +1,5 @@
-use std::process::Command;
 use std::env;
+use std::process::Command;
 
 use adof::get_adof_dir;
 

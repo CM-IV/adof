@@ -15,6 +15,7 @@ pub mod link;
 pub mod list;
 pub mod patterns;
 pub mod push;
+pub mod readme;
 pub mod remove;
 pub mod unlink;
 
@@ -56,7 +57,7 @@ fn select_files(found_files: Vec<PathBuf>) -> Vec<String> {
     selected_files
 }
 
-fn create_backup_file(original_file: &str) -> String {
+fn create_file(original_file: &str) -> String {
     let home_dir = get_home_dir();
     let adof_dir = get_adof_dir();
 
