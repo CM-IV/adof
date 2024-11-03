@@ -5,29 +5,10 @@ use glob::glob;
 
 use adof::{get_adof_dir, get_home_dir};
 
+use crate::commands::patterns::FILE_PATTERNS;
 use crate::{database::add, git::init_git};
 
 use super::*;
-
-const FILE_PATTERNS: [&str; 17] = [
-    ".bashrc",
-    ".zshrc",
-    ".bash_profile",
-    ".profile",
-    ".vimrc",
-    ".gitconfig",
-    ".config/nvim/**/*.vim",
-    ".config/git/config",
-    ".cargo/config",
-    ".config/starship.toml",
-    ".config/tmux/tmux.conf",
-    ".config/alacritty/alacritty.yml",
-    ".docker/config.json",
-    ".npmrc",
-    ".yarnrc",
-    ".config/wezterm/wezterm.lua",
-    ".config/nvim/**/*.lua",
-];
 
 pub fn init() {
     let found_files = find_files();

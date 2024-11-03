@@ -12,6 +12,7 @@ use crate::database::get_table_struct;
 pub mod add;
 pub mod init;
 pub mod list;
+pub mod patterns;
 pub mod remove;
 
 fn select_files(found_files: Vec<PathBuf>) -> Vec<String> {

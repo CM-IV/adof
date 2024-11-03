@@ -20,9 +20,10 @@ fn print_directory(path: &Path, level: usize, prefix: &str) {
                 if path.file_name().unwrap() == ".git" {
                     continue;
                 }
-                
+
                 print_entry(&path, prefix, is_last_entry, true);
-                let new_prefix = format!("{}{}", prefix, if is_last_entry { "    " } else { "│   " });
+                let new_prefix =
+                    format!("{}{}", prefix, if is_last_entry { "    " } else { "│   " });
                 print_directory(&path, level + 1, &new_prefix);
             } else if path.is_file() {
                 print_entry(&path, prefix, is_last_entry, false);
