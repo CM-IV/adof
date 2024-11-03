@@ -11,6 +11,7 @@ use crate::database::get_table_struct;
 
 pub mod add;
 pub mod init;
+pub mod link;
 pub mod list;
 pub mod patterns;
 pub mod remove;

@@ -13,7 +13,7 @@ pub fn init_git() {
     add::git_add()
 }
 
-fn get_repo() -> Repository {
+pub fn get_repo() -> Repository {
     let adof_dir = get_adof_dir();
     Repository::open(adof_dir).unwrap()
 }

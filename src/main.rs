@@ -63,7 +63,7 @@ pub mod commands;
 pub mod database;
 pub mod git;
 
-use commands::{add, init, list, remove};
+use commands::{add, init, link, list, remove};
 
 #[derive(Parser)]
 #[command(name = "adof")]
@@ -146,7 +146,7 @@ fn main() {
         }
 
         Commands::Link { link } => {
-            println!("Linking with GitHub Repo. Link: {:?}", link);
+            link::link(&link);
         }
 
         Commands::Push => {
