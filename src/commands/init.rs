@@ -3,15 +3,19 @@ use std::path::PathBuf;
 
 use glob::glob;
 
-use adof::{get_adof_dir, get_home_dir};
+use adof::get_home_dir;
 
 use crate::commands::patterns::FILE_PATTERNS;
 use crate::commands::readme::create_readme;
-use crate::{database::add, git::init_git};
+use crate::{
+    database::{add, create_database},
+    git::init_git,
+};
 
 use super::*;
 
 pub fn init() {
+    create_database();
     let readme_file_path = create_readme();
 
     let found_files = find_files();
@@ -19,15 +23,8 @@ pub fn init() {
     let mut selected_files = select_files(found_files);
     selected_files.push(readme_file_path);
 
-    create_adof_dir();
-
     create_backup_files(&selected_files);
     init_git();
-}
-
-fn create_adof_dir() {
-    let adof_dir = get_adof_dir();
-    fs::create_dir_all(&adof_dir).expect("failed to create adof dir.");
 }
 
 fn find_files() -> Vec<PathBuf> {

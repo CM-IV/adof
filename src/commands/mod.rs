@@ -7,7 +7,7 @@ use std::{
 
 use adof::{get_adof_dir, get_home_dir};
 
-use crate::database::get_table_struct;
+use crate::database::{get_database_path, get_table_struct};
 
 pub mod add;
 pub mod init;
@@ -57,7 +57,7 @@ fn select_files(found_files: Vec<PathBuf>) -> Vec<String> {
     selected_files
 }
 
-fn create_file(original_file: &str) -> String {
+pub fn create_file(original_file: &str) -> String {
     let home_dir = get_home_dir();
     let adof_dir = get_adof_dir();
 
@@ -75,4 +75,9 @@ fn create_file(original_file: &str) -> String {
 fn is_file_backedup(original_file: &str) -> bool {
     let table_struct = get_table_struct();
     table_struct.table.contains_key(original_file)
+}
+
+fn check_for_init() -> bool {
+    let database_path = get_database_path();
+    fs::exists(&database_path).unwrap()
 }

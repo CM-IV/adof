@@ -7,10 +7,16 @@ use adof::get_home_dir;
 
 use crate::database::add::add_files;
 use crate::git::add::git_add;
+use crate::init::init;
 
 use super::*;
 
 pub fn add() {
+    if !check_for_init() {
+        init();
+        process::exit(1);
+    }
+
     let files_to_add = get_files_to_add();
 
     if files_to_add.is_empty() {

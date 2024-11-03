@@ -1,5 +1,6 @@
 use std::collections::HashMap;
 use std::fs;
+use std::path::Path;
 
 use serde::{Deserialize, Serialize};
 
@@ -21,13 +22,22 @@ impl DataTable {
     }
 }
 
-fn get_database_path() -> String {
+pub fn create_database() {
+    let database_path = get_database_path();
+    let database_dir = Path::new(&database_path).parent().unwrap();
+    fs::create_dir_all(&database_dir).unwrap();
+
+    fs::File::create(&database_path).unwrap();
+
+    let table_struct = DataTable::new();
+    let json_table = serde_json::to_string_pretty(&table_struct).unwrap();
+
+    fs::write(&database_path, json_table).unwrap();
+}
+
+pub fn get_database_path() -> String {
     let adof_dir = get_adof_dir();
-    let database_dir = format!("{}/{}", adof_dir, "do_not_touch");
-
-    fs::create_dir_all(&database_dir).expect("failed to create darabase dir");
-
-    let database_path = format!("{}/{}", database_dir, "/path_databse.json");
+    let database_path = format!("{}/{}", adof_dir, "do_not_touch/path_databse.json");
 
     database_path
 }
