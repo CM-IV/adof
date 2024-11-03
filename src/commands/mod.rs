@@ -15,6 +15,7 @@ pub mod link;
 pub mod list;
 pub mod patterns;
 pub mod remove;
+pub mod unlink;
 
 fn select_files(found_files: Vec<PathBuf>) -> Vec<String> {
     let found_files = found_files

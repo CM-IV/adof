@@ -63,7 +63,7 @@ pub mod commands;
 pub mod database;
 pub mod git;
 
-use commands::{add, init, link, list, remove};
+use commands::{add, init, link, list, remove, unlink};
 
 #[derive(Parser)]
 #[command(name = "adof")]
@@ -169,7 +169,7 @@ fn main() {
         }
 
         Commands::Unlink => {
-            println!("Unlinked with GitHub Repo");
+            unlink::unlink();
         }
 
         Commands::Uninstall => {
