@@ -14,6 +14,7 @@ pub mod init;
 pub mod link;
 pub mod list;
 pub mod patterns;
+pub mod push;
 pub mod remove;
 pub mod unlink;
 

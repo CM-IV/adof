@@ -6,16 +6,6 @@
 //          and when there is upate sync the changes
 //          - also have option to disable the auto_update if they want to
 //
-// push - push the changes to GitHub Repo with commit message that include
-//      - process
-//          - when the user runs the push command first print a summary in a table format with file
-//          name, then changes means how many lines added and deleted.
-//          - then ask for conformation to push or not
-//          - if user says yes then push to GitHub with commit message that contains
-//              - date
-//              - time
-//              - files that are changed with how many lines added and deleted
-//
 // deploy - copy all the dot files from GitHub and store in the local machine at perfect places
 //      - process
 //          - when user runs the deploy command first fetch the files and shows a summary of all
@@ -56,7 +46,7 @@ pub mod commands;
 pub mod database;
 pub mod git;
 
-use commands::{add, init, link, list, remove, unlink};
+use commands::{add, init, link, list, push, remove, unlink};
 
 #[derive(Parser)]
 #[command(name = "adof")]
@@ -143,7 +133,7 @@ fn main() {
         }
 
         Commands::Push => {
-            println!("Pushing changes to GitHub");
+            push::push();
         }
 
         Commands::Log => {
