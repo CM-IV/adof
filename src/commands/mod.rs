@@ -17,6 +17,7 @@ pub mod patterns;
 pub mod push;
 pub mod readme;
 pub mod remove;
+pub mod uninstall;
 pub mod unlink;
 
 fn select_files(found_files: Vec<PathBuf>) -> Vec<String> {

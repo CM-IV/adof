@@ -46,7 +46,7 @@ pub mod commands;
 pub mod database;
 pub mod git;
 
-use commands::{add, init, link, list, push, remove, unlink};
+use commands::{add, init, link, list, push, remove, uninstall, unlink};
 
 #[derive(Parser)]
 #[command(name = "adof")]
@@ -156,7 +156,7 @@ fn main() {
         }
 
         Commands::Uninstall => {
-            println!("Uninstalling Adof.");
+            uninstall::uninstall();
         }
 
         Commands::Sponsor => {

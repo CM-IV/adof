@@ -25,7 +25,7 @@ impl DataTable {
 pub fn create_database() {
     let database_path = get_database_path();
     let database_dir = Path::new(&database_path).parent().unwrap();
-    fs::create_dir_all(&database_dir).unwrap();
+    fs::create_dir_all(database_dir).unwrap();
 
     fs::File::create(&database_path).unwrap();
 
@@ -47,10 +47,4 @@ pub fn get_table_struct() -> DataTable {
     let database_contents = fs::read_to_string(&database_path).unwrap();
     let table_struct: DataTable = serde_json::from_str(&database_contents).unwrap();
     table_struct
-}
-
-fn get_backup_file_path(original_path: &str) -> String {
-    let table_struct = get_table_struct();
-    let copied_path = table_struct.table.get(original_path).unwrap();
-    copied_path.to_owned()
 }
