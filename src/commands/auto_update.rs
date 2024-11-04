@@ -9,7 +9,7 @@ use crate::git::add::git_add;
 pub async fn auto_update() {
     loop {
         update();
-        sleep(Duration::from_secs(3600)).await;
+        sleep(Duration::from_secs(10)).await;
     }
 }
 
