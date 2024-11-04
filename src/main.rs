@@ -44,7 +44,7 @@ use commands::{add, init, link, list, push, remove, uninstall, unlink, update};
 
 #[derive(Parser)]
 #[command(name = "adof")]
-#[command(version = "v0.1.1")]
+#[command(version = "v0.7.0")]
 #[command(author = "Abinash S. <fnabinash@gmail.com>")]
 #[command(about = "ADOF - An Automatic Dot-files Organizer Friend", long_about = None)]
 struct Cli {
