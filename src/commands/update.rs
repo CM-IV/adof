@@ -18,6 +18,7 @@ pub fn update() {
         .for_each(|(original_file, backedup_file)| {
             fs::copy(original_file, backedup_file).unwrap();
         });
+
     if files_to_update.len() > 0 {
         git_add();
     }
