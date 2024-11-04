@@ -2,9 +2,26 @@ use std::fs;
 use std::path::Path;
 use std::process::Command;
 
+use sysinfo::System;
+
 use adof::{get_adof_dir, get_home_dir};
 
 pub fn uninstall() {
+    let sys = System::new_all();
+
+    sys.processes().iter().for_each(|process| {
+        if process
+            .1
+            .name()
+            .to_str()
+            .unwrap()
+            .contains("adof auto-update")
+        {
+            println!("{:?}", process.1.name());
+            process.1.kill();
+        }
+    });
+
     let home_dir = get_home_dir();
     let dotfile_readme_dir = format!("{}/dotfiles_readme", home_dir);
     remove_dir(&dotfile_readme_dir);
