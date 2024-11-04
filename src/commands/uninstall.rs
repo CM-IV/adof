@@ -21,7 +21,7 @@ fn remove_dir(dir: &str) {
     let path = Path::new(dir);
 
     if path.is_dir() {
-    fs::remove_dir_all(path).unwrap();
+        fs::remove_dir_all(path).unwrap();
     }
 
     if path.is_file() {

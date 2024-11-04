@@ -42,7 +42,7 @@ pub mod commands;
 pub mod database;
 pub mod git;
 
-use commands::{add, init, link, list, push, remove, uninstall, unlink};
+use commands::{add, init, link, list, push, remove, uninstall, unlink, update};
 
 #[derive(Parser)]
 #[command(name = "adof")]
@@ -76,6 +76,9 @@ enum Commands {
 
     /// Push the local changes to GitHub
     Push,
+
+    /// Update the changes manually
+    Update,
 
     /// Got logs of latest changes
     Log,
@@ -130,6 +133,10 @@ fn main() {
 
         Commands::Push => {
             push::push();
+        }
+
+        Commands::Update => {
+            update::update();
         }
 
         Commands::Log => {
