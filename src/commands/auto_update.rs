@@ -1,6 +1,6 @@
 use std::fs;
-use std::time::Duration;
 use std::process;
+use std::time::Duration;
 
 use tokio::time::sleep;
 
@@ -34,7 +34,7 @@ fn update() {
             fs::copy(original_file, backedup_file).unwrap();
         });
 
-    if files_to_update.len() > 0 {
+    if files_to_update.is_empty() {
         git_add();
     }
 }

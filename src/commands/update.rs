@@ -19,7 +19,7 @@ pub fn update() {
             fs::copy(original_file, backedup_file).unwrap();
         });
 
-    if files_to_update.len() > 0 {
+    if files_to_update.is_empty() {
         git_add();
     }
 }

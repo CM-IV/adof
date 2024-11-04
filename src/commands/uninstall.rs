@@ -5,7 +5,7 @@ use std::process::Command;
 use adof::{get_adof_dir, get_home_dir};
 
 pub fn uninstall() {
-        let adof_dir = get_adof_dir();
+    let adof_dir = get_adof_dir();
     let pid_file = format!("{}/do_not_touch/pid.txt", adof_dir);
     let pid = fs::read_to_string(&pid_file).unwrap();
     Command::new("kill").arg(pid.trim()).output().unwrap();
