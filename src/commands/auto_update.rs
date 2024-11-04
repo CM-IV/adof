@@ -1,12 +1,17 @@
 use std::fs;
 use std::time::Duration;
+use std::process;
 
 use tokio::time::sleep;
+
+use adof::get_adof_dir;
 
 use crate::database::get_table_struct;
 use crate::git::add::git_add;
 
 pub async fn auto_update() {
+    store_pid();
+
     loop {
         update();
         sleep(Duration::from_secs(10)).await;
@@ -46,5 +51,7 @@ fn is_to_modify(original_file: &str, backedup_file: &str) -> bool {
 
 fn store_pid() {
     let adof_dir = get_adof_dir();
-    let pid_file = format!("{}/do_not_touch/pid.txt");
+    let pid_file = format!("{}/do_not_touch/pid.txt", adof_dir);
+    let pid = process::id();
+    fs::write(&pid_file, pid.to_string()).unwrap();
 }
