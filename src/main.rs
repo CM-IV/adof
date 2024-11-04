@@ -35,6 +35,7 @@
 // revert to previous changes made in that day or on the any day they want to
 
 use clap::{Parser, Subcommand};
+// use tokio;
 
 pub mod commands;
 pub mod database;
@@ -108,7 +109,8 @@ enum Commands {
     Sponsor,
 }
 
-fn main() {
+#[tokio::main]
+async fn main() {
     let cli = Cli::parse();
 
     match &cli.command {
@@ -141,7 +143,7 @@ fn main() {
         }
 
         Commands::AutoUpdate => {
-            auto_update::auto_update();
+            auto_update::auto_update().await;
         }
 
         Commands::Log => {
