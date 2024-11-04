@@ -14,7 +14,7 @@ pub fn create_readme() -> String {
     let readme_file_path = format!("{}/README.md", readme_dir);
     let mut readme_file = fs::File::create(&readme_file_path).unwrap();
 
-    let url = "https://raw.githubusercontent.com/fnabinash/rust-practice/refs/heads/main/README.md";
+    let url ="https://raw.githubusercontent.com/fnabinash/adof/refs/heads/main/src/commands/README.md";
     let mut response = blocking::get(url).unwrap();
 
     io::copy(&mut response, &mut readme_file).unwrap();
