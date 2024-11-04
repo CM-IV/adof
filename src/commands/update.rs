@@ -1,6 +1,7 @@
 use std::fs;
 
 use crate::database::get_table_struct;
+use crate::git::add::git_add;
 
 pub fn update() {
     let mut files_to_update: Vec<(String, String)> = Vec::new();
@@ -17,6 +18,9 @@ pub fn update() {
         .for_each(|(original_file, backedup_file)| {
             fs::copy(original_file, backedup_file).unwrap();
         });
+    if files_to_update.len() > 0 {
+        git_add();
+    }
 }
 
 fn is_to_modify(original_file: &str, backedup_file: &str) -> bool {

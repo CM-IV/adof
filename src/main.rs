@@ -1,5 +1,3 @@
-// update - manually update
-//
 // auto_update - to automatically update when there is changes
 //      - args
 //          - then can time limit like 1 hour or 1 min or 10 min to periodically check for updates
