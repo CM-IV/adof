@@ -21,10 +21,6 @@
 //          user runs the deploy command
 //          - then do a small animation to celebrate🎉
 //
-// uninstall - remove adof from your machine, while uninstalling first check if there is untracked
-// or uncommitted changes or not if not then uninstall if yes then ask for permission to forcefully
-// uninstall.
-//
 // log - log the last changes they made
 //      - parameters
 //          - date - list all the changes happened that day
