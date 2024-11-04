@@ -43,3 +43,8 @@ fn is_to_modify(original_file: &str, backedup_file: &str) -> bool {
 
     original_file_last_modification > backedup_file_last_modification
 }
+
+fn store_pid() {
+    let adof_dir = get_adof_dir();
+    let pid_file = format!("{}/do_not_touch/pid.txt");
+}
