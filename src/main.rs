@@ -40,7 +40,7 @@ pub mod commands;
 pub mod database;
 pub mod git;
 
-use commands::{add, init, link, list, push, remove, uninstall, unlink, update};
+use commands::{add, auto_update, init, link, list, push, remove, uninstall, unlink, update};
 
 #[derive(Parser)]
 #[command(name = "adof")]
@@ -77,6 +77,9 @@ enum Commands {
 
     /// Update the changes manually
     Update,
+
+    /// Automatically update the changes
+    AutoUpdate,
 
     /// Got logs of latest changes
     Log,
@@ -135,6 +138,10 @@ fn main() {
 
         Commands::Update => {
             update::update();
+        }
+
+        Commands::AutoUpdate => {
+            auto_update::auto_update();
         }
 
         Commands::Log => {

@@ -10,6 +10,7 @@ use adof::{get_adof_dir, get_home_dir};
 use crate::database::{get_database_path, get_table_struct};
 
 pub mod add;
+pub mod auto_update;
 pub mod init;
 pub mod link;
 pub mod list;
