@@ -1,5 +1,6 @@
 use std::fs;
 use std::path::PathBuf;
+use std::process;
 
 use glob::glob;
 
@@ -15,6 +16,11 @@ use crate::{
 use super::*;
 
 pub async fn init() {
+    if check_for_init() {
+        println!("Already initialized");
+        process::exit(1);
+    }
+
     create_database();
 
     let found_files = find_files();

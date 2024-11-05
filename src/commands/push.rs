@@ -7,10 +7,10 @@ pub fn push() {
     let adof_dir = get_adof_dir();
     env::set_current_dir(adof_dir).unwrap();
 
-    let output = Command::new("git")
+    Command::new("git")
         .arg("push")
         .arg("origin")
         .arg("main")
-        .output();
-    println!("{:?}", output);
+        .output()
+        .unwrap();
 }
