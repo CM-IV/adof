@@ -1,6 +1,6 @@
 use std::fs;
 
-use adof::{get_home_dir, get_adof_dir};
+use adof::{get_adof_dir, get_home_dir};
 
 use crate::database::add;
 
