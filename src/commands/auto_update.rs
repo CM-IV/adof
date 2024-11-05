@@ -28,13 +28,13 @@ fn update() {
         }
     });
 
-    files_to_update
-        .iter()
-        .for_each(|(original_file, backedup_file)| {
-            fs::copy(original_file, backedup_file).unwrap();
-        });
+    if !files_to_update.is_empty() {
+        files_to_update
+            .iter()
+            .for_each(|(original_file, backedup_file)| {
+                fs::copy(original_file, backedup_file).unwrap();
+            });
 
-    if files_to_update.is_empty() {
         git_add();
     }
 }
