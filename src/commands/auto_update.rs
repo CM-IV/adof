@@ -9,12 +9,12 @@ use adof::get_adof_dir;
 use crate::database::get_table_struct;
 use crate::git::add::git_add;
 
-pub async fn auto_update() {
+pub async fn auto_update(min: u64) {
     store_pid();
 
     loop {
         update();
-        sleep(Duration::from_secs(10)).await;
+        sleep(Duration::from_secs(min * 60)).await;
     }
 }
 

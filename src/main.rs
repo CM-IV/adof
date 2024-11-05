@@ -1,9 +1,3 @@
-// auto_update - to automatically update when there is changes
-//      - args
-//          - then can time limit like 1 hour or 1 min or 10 min to periodically check for updates
-//          and when there is upate sync the changes
-//          - also have option to disable the auto_update if they want to
-//
 // deploy - copy all the dot files from GitHub and store in the local machine at perfect places
 //      - process
 //          - when user runs the deploy command first fetch the files and shows a summary of all
@@ -79,7 +73,11 @@ enum Commands {
     Update,
 
     /// Automatically update the changes
-    AutoUpdate,
+    AutoUpdate {
+        /// Set how fast you want to auto update
+        #[arg(default_value = "60")]
+        min: u64,
+    },
 
     /// Got logs of latest changes
     Log,
@@ -141,8 +139,8 @@ async fn main() {
             update::update();
         }
 
-        Commands::AutoUpdate => {
-            auto_update::auto_update().await;
+        Commands::AutoUpdate { min } => {
+            auto_update::auto_update(*min).await;
         }
 
         Commands::Log => {
