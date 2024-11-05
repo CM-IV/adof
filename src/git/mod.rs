@@ -1,5 +1,5 @@
 use chrono::Local;
-use git2::{Repository, Signature};
+use git2::{Repository, Signature, BranchType};
 
 use adof::get_adof_dir;
 
@@ -44,6 +44,25 @@ fn get_default_branch() -> String {
     } else {
         "master".to_string()
     }
+}
+
+fn get_old_branch() -> String {
+    let repo = get_repo();
+    let default_branch = get_default_branch();
+    let mut old_branch = String::new();
+
+    let branches_iter = repo.branches(Some(BranchType::Local)).unwrap();
+
+    for branch in branches_iter {
+        let (branch, _) = branch.unwrap();
+        let branch_name = branch.name().unwrap().unwrap_or_default().to_string();
+
+        if branch_name != default_branch {
+            old_branch = branch_name;
+        }
+    }
+
+    old_branch
 }
 
 fn get_today() -> String {

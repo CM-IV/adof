@@ -13,25 +13,6 @@ pub fn merge() {
     delete_old_branch(&old_branch);
 }
 
-fn get_old_branch() -> String {
-    let repo = get_repo();
-    let default_branch = get_default_branch();
-    let mut old_branch = String::new();
-
-    let branches_iter = repo.branches(Some(BranchType::Local)).unwrap();
-
-    for branch in branches_iter {
-        let (branch, _) = branch.unwrap();
-        let branch_name = branch.name().unwrap().unwrap_or_default().to_string();
-
-        if branch_name != default_branch {
-            old_branch = branch_name;
-        }
-    }
-
-    old_branch
-}
-
 fn get_commit_message(repo: &Repository, source_oid: Oid, target_oid: Oid) -> String {
     let target_commit = repo.find_commit(target_oid).unwrap();
     let source_commit = repo.find_commit(source_oid).unwrap();
