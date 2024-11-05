@@ -10,7 +10,7 @@ use crate::commands::patterns::FILE_PATTERNS;
 use crate::commands::readme::create_readme;
 use crate::{
     database::{add, create_database},
-    git::init_git,
+    git::{git_ignore::create_git_ignore, init_git},
 };
 
 use super::*;
@@ -22,11 +22,12 @@ pub async fn init() {
     }
 
     create_database();
+    create_git_ignore();
 
     let found_files = find_files();
 
-    let selected_files = select_files(found_files);
     create_readme().await;
+    let selected_files = select_files(found_files);
 
     create_backup_files(&selected_files);
     init_git();
