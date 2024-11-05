@@ -14,7 +14,7 @@ pub fn commit() {
         process::exit(1);
     }
 
-    if is_new_day() && !get_old_branch().is_empty(){
+    if is_new_day() {
         create_new_branch();
         commit_changes(&commit_message);
     } else {

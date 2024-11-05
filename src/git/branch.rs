@@ -3,7 +3,9 @@ use crate::git::merge::merge;
 use super::*;
 
 pub fn create_new_branch() {
-    merge();
+    if !get_old_branch().is_empty() {
+        merge();
+    }
 
     let repo = get_repo();
     let branch_name = get_today();

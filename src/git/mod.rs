@@ -1,5 +1,5 @@
 use chrono::Local;
-use git2::{Repository, Signature, BranchType};
+use git2::{BranchType, Repository, Signature};
 
 use adof::get_adof_dir;
 
