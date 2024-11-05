@@ -1,3 +1,5 @@
+use std::process;
+
 use git2::BranchType;
 
 use crate::git::{branch::create_new_branch, commit_message::get_commit_message};
@@ -9,6 +11,7 @@ pub fn commit() {
 
     if get_repo().head().is_err() {
         commit_changes(&commit_message);
+        process::exit(1);
     }
 
     if is_new_day() {
