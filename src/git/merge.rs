@@ -77,7 +77,9 @@ fn get_commit_message(repo: &Repository, source_oid: Oid, target_oid: Oid) -> St
         }
     }
 
-    file_logs.join("\n")
+    let change_logs = file_logs.join("\n");
+    let current_time = get_current_date_and_time();
+    format!("{}\n\n{}", current_time, change_logs)
 }
 
 fn squash_merge(repo: &Repository, source_branch: &str, target_branch: &str) {

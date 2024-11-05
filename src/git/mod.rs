@@ -67,5 +67,15 @@ fn get_old_branch() -> String {
 
 fn get_today() -> String {
     let current_date_time = Local::now().naive_local();
-    current_date_time.format("%e %b %Y").to_string()
+    current_date_time
+        .format("%e-%b-%Y")
+        .to_string()
+        .trim()
+        .to_string()
+}
+
+fn get_current_date_and_time() -> String {
+    let current_time = Local::now().naive_local();
+    let formatted_current_time = current_time.format("%a,%e %b %Y %l:%M %p");
+    formatted_current_time.to_string()
 }

@@ -1,6 +1,5 @@
 use std::collections::HashMap;
 
-use chrono::Local;
 use git2::{Delta, DiffOptions};
 
 use super::*;
@@ -9,12 +8,6 @@ pub fn get_commit_message() -> String {
     let current_time = get_current_date_and_time();
     let each_file_status = get_change_logs();
     format!("{}\n\n{}", current_time, each_file_status)
-}
-
-fn get_current_date_and_time() -> String {
-    let current_time = Local::now().naive_local();
-    let formatted_current_time = current_time.format("%a,%e %b %Y %l:%M %p");
-    formatted_current_time.to_string()
 }
 
 fn get_change_logs() -> String {
