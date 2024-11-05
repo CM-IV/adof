@@ -1,5 +1,5 @@
 use chrono::Local;
-use git2::{BranchType, Signature};
+use git2::BranchType;
 
 use crate::git::commit_message::get_commit_message;
 
