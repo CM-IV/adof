@@ -1,3 +1,4 @@
+use chrono::Local;
 use git2::{Repository, Signature};
 
 use adof::get_adof_dir;
@@ -43,4 +44,9 @@ fn get_default_branch() -> String {
     } else {
         "master".to_string()
     }
+}
+
+fn get_today() -> String {
+    let current_date_time = Local::now().naive_local();
+    current_date_time.format("%e %b %Y").to_string()
 }

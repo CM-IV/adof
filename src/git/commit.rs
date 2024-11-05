@@ -1,7 +1,6 @@
-use chrono::Local;
 use git2::BranchType;
 
-use crate::git::commit_message::get_commit_message;
+use crate::git::{branch::create_new_branch, commit_message::get_commit_message};
 
 use super::*;
 
@@ -13,14 +12,11 @@ pub fn commit() {
     }
 
     if is_new_day() {
+        create_new_branch();
+        commit_changes(&commit_message);
     } else {
         commit_changes(&commit_message);
     }
-}
-
-fn get_today() -> String {
-    let current_date_time = Local::now().naive_local();
-    current_date_time.format("%e %b %Y").to_string()
 }
 
 fn is_new_day() -> bool {

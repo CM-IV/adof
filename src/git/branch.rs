@@ -1,9 +1,5 @@
-use chrono::Local;
+use crate::git::merge::merge;
 
-pub fn commit_on_new_branch() {}
-
-pub fn create_new_branch() {}
-
-fn commit_changes() {}
-
-//fn get
+pub fn create_new_branch() {
+    merge();
+}
