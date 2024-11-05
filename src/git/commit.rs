@@ -8,6 +8,10 @@ use super::*;
 pub fn commit() {
     let commit_message = get_commit_message();
 
+    if get_repo().head().is_err() {
+        commit_changes(&commit_message);
+    }
+
     if is_new_day() {
     } else {
         commit_changes(&commit_message);
@@ -36,15 +40,7 @@ fn commit_changes(commit_message: &str) {
         Err(_) => None,
     };
 
-    let config = repo.config().unwrap();
-    let name = config
-        .get_string("user.name")
-        .unwrap_or("Unknown".to_string());
-    let email = config
-        .get_string("user.email")
-        .unwrap_or("unknown@example.com".to_string());
-
-    let signature = Signature::now(&name, &email).unwrap();
+    let signature = get_signature();
 
     if let Some(parent) = parent_commit {
         repo.commit(
