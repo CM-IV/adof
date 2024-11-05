@@ -1,24 +1,38 @@
 use std::fs;
-use std::io;
 
-use reqwest::blocking;
+use adof::{get_home_dir, get_adof_dir};
 
-use adof::get_home_dir;
+use crate::database::add;
 
-pub fn create_readme() -> String {
+pub async fn create_readme() {
+    let local_readme = create_local_readme().await;
+    create_backup_readme(&local_readme);
+}
+
+async fn create_local_readme() -> String {
     let home_dir = get_home_dir();
+    let local_readme_dir = format!("{}/dotfiles_readme", home_dir);
 
-    let readme_dir = format!("{}/dotfiles_readme", home_dir);
-    fs::create_dir_all(&readme_dir).unwrap();
+    fs::create_dir_all(&local_readme_dir).unwrap();
 
-    let readme_file_path = format!("{}/README.md", readme_dir);
-    let mut readme_file = fs::File::create(&readme_file_path).unwrap();
+    let local_readme_file_path = format!("{}/README.md", local_readme_dir);
+    fs::File::create(&local_readme_file_path).unwrap();
 
     let url =
         "https://raw.githubusercontent.com/fnabinash/adof/refs/heads/main/src/commands/README.md";
-    let mut response = blocking::get(url).unwrap();
+    let response = reqwest::get(url).await.unwrap().text().await.unwrap();
 
-    io::copy(&mut response, &mut readme_file).unwrap();
+    fs::write(&local_readme_file_path, response.as_bytes()).unwrap();
 
-    readme_file_path
+    local_readme_file_path
+}
+
+fn create_backup_readme(local_readme_file: &str) {
+    let adof_dir = get_adof_dir();
+    let backup_readme_file = format!("{}/README.md", adof_dir);
+
+    fs::File::create(&backup_readme_file).unwrap();
+    fs::copy(local_readme_file, &backup_readme_file).unwrap();
+
+    add::add_files(local_readme_file, &backup_readme_file);
 }

@@ -14,14 +14,13 @@ use crate::{
 
 use super::*;
 
-pub fn init() {
+pub async fn init() {
     create_database();
-    let readme_file_path = create_readme();
 
     let found_files = find_files();
 
-    let mut selected_files = select_files(found_files);
-    selected_files.push(readme_file_path);
+    let selected_files = select_files(found_files);
+    create_readme().await;
 
     create_backup_files(&selected_files);
     init_git();
@@ -51,5 +50,5 @@ fn create_backup_files(selected_files: &[String]) {
         let backup_file = create_file(&selected_files[i]);
         fs::copy(&selected_files[i], &backup_file).unwrap();
         add::add_files(&selected_files[i], &backup_file);
-    })
+    });
 }

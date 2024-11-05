@@ -11,9 +11,9 @@ use crate::init::init;
 
 use super::*;
 
-pub fn add() {
+pub async fn add() {
     if !check_for_init() {
-        init();
+        init().await;
         process::exit(1);
     }
 

@@ -114,11 +114,11 @@ async fn main() {
 
     match &cli.command {
         Commands::Init => {
-            init::init();
+            init::init().await;
         }
 
         Commands::Add => {
-            add::add();
+            add::add().await;
         }
 
         Commands::Remove => {
