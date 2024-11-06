@@ -1,6 +1,6 @@
 use std::collections::HashMap;
 
-use git2::{BranchType, Delta, DiffOptions, IndexAddOption, MergeOptions, Oid, Repository};
+use git2::{BranchType, Delta, DiffOptions, IndexAddOption, Oid, Repository, MergeOptions};
 
 use super::*;
 
@@ -82,25 +82,26 @@ fn get_commit_message(repo: &Repository, source_oid: Oid, target_oid: Oid) -> St
     format!("{}\n\n{}", current_time, change_logs)
 }
 
-fn squash_merge(repo: &Repository, source_branch: &str, target_branch: &str) {
-    repo.set_head(&format!("refs/heads/{}", target_branch))
+fn squash_merge(repo: &Repository, source_branch_name: &str, target_branch_name: &str) {
+    repo.set_head(&format!("refs/heads/{}", target_branch_name))
         .unwrap();
     repo.checkout_head(None).unwrap();
 
     let sig = get_signature();
-
-    let target_branch = repo
-        .find_branch(target_branch, git2::BranchType::Local)
-        .unwrap();
-    let source_branch = repo
-        .find_branch(source_branch, git2::BranchType::Local)
-        .unwrap();
+    let target_branch = repo.find_branch(target_branch_name, BranchType::Local).unwrap();
+    let source_branch = repo.find_branch(source_branch_name, BranchType::Local).unwrap();
 
     let target_oid = target_branch.get().target().unwrap();
     let source_oid = source_branch.get().target().unwrap();
 
     let target_commit = repo.find_commit(target_oid).unwrap();
     let source_commit = repo.find_commit(source_oid).unwrap();
+
+    let _temp_branch = repo
+        .branch("temp_squash", &repo.find_commit(target_oid).unwrap(), false)
+        .unwrap();
+    repo.set_head("refs/heads/temp_squash").unwrap();
+    repo.checkout_head(None).unwrap();
 
     let mut merge_opts = MergeOptions::new();
     merge_opts.file_favor(git2::FileFavor::Theirs);
@@ -121,7 +122,7 @@ fn squash_merge(repo: &Repository, source_branch: &str, target_branch: &str) {
     let tree = repo.find_tree(tree_oid).unwrap();
     let commit_message = get_commit_message(&repo, source_oid, target_oid);
 
-    repo.commit(
+    let squash_commit_oid = repo.commit(
         Some("HEAD"),
         &sig,
         &sig,
@@ -130,6 +131,18 @@ fn squash_merge(repo: &Repository, source_branch: &str, target_branch: &str) {
         &[&target_commit, &source_commit],
     )
     .unwrap();
+
+    repo.set_head(&format!("refs/heads/{}", target_branch_name))
+        .unwrap();
+    repo.checkout_head(None).unwrap();
+    let squash_commit = repo.find_commit(squash_commit_oid).unwrap();
+
+    repo.cherrypick(&squash_commit, None).unwrap();
+
+    repo.find_branch("temp_squash", BranchType::Local)
+        .unwrap()
+        .delete()
+        .unwrap();
 }
 
 fn delete_old_branch(old_branch: &str) {
