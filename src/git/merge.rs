@@ -1,6 +1,9 @@
 use std::collections::HashMap;
 
-use git2::{BranchType, Delta, DiffOptions, IndexAddOption, Oid, Repository, MergeOptions};
+use git2::{
+    BranchType, CherrypickOptions, Delta, DiffOptions, IndexAddOption, MergeOptions, Oid,
+    Repository,
+};
 
 use super::*;
 
@@ -88,8 +91,12 @@ fn squash_merge(repo: &Repository, source_branch_name: &str, target_branch_name:
     repo.checkout_head(None).unwrap();
 
     let sig = get_signature();
-    let target_branch = repo.find_branch(target_branch_name, BranchType::Local).unwrap();
-    let source_branch = repo.find_branch(source_branch_name, BranchType::Local).unwrap();
+    let target_branch = repo
+        .find_branch(target_branch_name, BranchType::Local)
+        .unwrap();
+    let source_branch = repo
+        .find_branch(source_branch_name, BranchType::Local)
+        .unwrap();
 
     let target_oid = target_branch.get().target().unwrap();
     let source_oid = source_branch.get().target().unwrap();
@@ -122,22 +129,50 @@ fn squash_merge(repo: &Repository, source_branch_name: &str, target_branch_name:
     let tree = repo.find_tree(tree_oid).unwrap();
     let commit_message = get_commit_message(&repo, source_oid, target_oid);
 
-    let squash_commit_oid = repo.commit(
-        Some("HEAD"),
-        &sig,
-        &sig,
-        &commit_message,
-        &tree,
-        &[&target_commit, &source_commit],
-    )
-    .unwrap();
+    let squash_commit_oid = repo
+        .commit(
+            Some("HEAD"),
+            &sig,
+            &sig,
+            &commit_message,
+            &tree,
+            &[&target_commit, &source_commit],
+        )
+        .unwrap();
 
     repo.set_head(&format!("refs/heads/{}", target_branch_name))
         .unwrap();
     repo.checkout_head(None).unwrap();
     let squash_commit = repo.find_commit(squash_commit_oid).unwrap();
 
-    repo.cherrypick(&squash_commit, None).unwrap();
+    let mut cherry_pick_opts = CherrypickOptions::new();
+
+    let mut merge_opts = MergeOptions::new();
+    merge_opts.file_favor(git2::FileFavor::Theirs);
+
+    cherry_pick_opts.mainline(1).merge_opts(merge_opts);
+
+    if let Err(e) = repo.cherrypick(&squash_commit, Some(&mut cherry_pick_opts)) {
+        if e.code() == git2::ErrorCode::MergeConflict {
+            let mut index = repo.index().unwrap();
+            index
+                .add_all(["*"].iter(), IndexAddOption::DEFAULT, None)
+                .unwrap();
+            index.write().unwrap();
+
+            let tree_oid = index.write_tree().unwrap();
+            let tree = repo.find_tree(tree_oid).unwrap();
+            repo.commit(
+                Some("HEAD"),
+                &sig,
+                &sig,
+                &commit_message,
+                &tree,
+                &[&repo.head().unwrap().peel_to_commit().unwrap()],
+            )
+            .unwrap();
+        }
+    }
 
     repo.find_branch("temp_squash", BranchType::Local)
         .unwrap()
