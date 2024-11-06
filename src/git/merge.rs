@@ -83,6 +83,10 @@ fn get_commit_message(repo: &Repository, source_oid: Oid, target_oid: Oid) -> St
 }
 
 fn squash_merge(repo: &Repository, source_branch: &str, target_branch: &str) {
+    repo.set_head(&format!("refs/heads/{}", target_branch))
+        .unwrap();
+    repo.checkout_head(None).unwrap();
+
     let sig = get_signature();
 
     let target_branch = repo
@@ -118,7 +122,7 @@ fn squash_merge(repo: &Repository, source_branch: &str, target_branch: &str) {
     let commit_message = get_commit_message(&repo, source_oid, target_oid);
 
     repo.commit(
-        Some("refs/heads/target"),
+        Some("HEAD"),
         &sig,
         &sig,
         &commit_message,
