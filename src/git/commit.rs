@@ -1,30 +1,10 @@
-use std::process;
-
-use git2::BranchType;
-
-use crate::git::{branch::create_new_branch, commit_message::get_commit_message};
+use crate::git::commit_message::get_commit_message;
 
 use super::*;
 
 pub fn commit() {
     let commit_message = get_commit_message();
-
-    if get_repo().head().is_err() {
-        commit_changes(&commit_message);
-        process::exit(1);
-    }
-
-    if is_new_day() {
-        create_new_branch();
-        commit_changes(&commit_message);
-    } else {
-        commit_changes(&commit_message);
-    }
-}
-
-fn is_new_day() -> bool {
-    let today = get_today();
-    get_repo().find_branch(&today, BranchType::Local).is_err()
+    commit_changes(&commit_message);
 }
 
 fn commit_changes(commit_message: &str) {
