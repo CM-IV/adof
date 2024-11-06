@@ -22,11 +22,6 @@
 //          changes they made
 //
 // commit - to list the last commit
-//
-// Idea - every day create a new branch with name equals to date of that day, and commit all the changes
-// thorough out the day with time then on the next day commit the changes with a squash merge with
-// all commits props like date time and the files that are changed, also if they can they can
-// revert to previous changes made in that day or on the any day they want to
 
 use clap::{Parser, Subcommand};
 
