@@ -1,6 +1,6 @@
 use std::collections::HashMap;
 
-use git2::{BranchType, Delta, DiffOptions, Oid, Repository};
+use git2::{BranchType, Delta, DiffOptions, IndexAddOption, MergeOptions, Oid, Repository};
 
 use super::*;
 
@@ -83,46 +83,47 @@ fn get_commit_message(repo: &Repository, source_oid: Oid, target_oid: Oid) -> St
 }
 
 fn squash_merge(repo: &Repository, source_branch: &str, target_branch: &str) {
-    repo.set_head(&format!("refs/heads/{}", target_branch))
-        .unwrap();
-    repo.checkout_head(None).unwrap();
+    let sig = get_signature();
 
-    let target_oid = repo
-        .refname_to_id(&format!("refs/heads/{}", target_branch))
+    let target_branch = repo
+        .find_branch(target_branch, git2::BranchType::Local)
         .unwrap();
-    let source_oid = repo
-        .refname_to_id(&format!("refs/heads/{}", source_branch))
+    let source_branch = repo
+        .find_branch(source_branch, git2::BranchType::Local)
         .unwrap();
 
-    let commit_message = get_commit_message(repo, source_oid, target_oid);
+    let target_oid = target_branch.get().target().unwrap();
+    let source_oid = source_branch.get().target().unwrap();
 
     let target_commit = repo.find_commit(target_oid).unwrap();
     let source_commit = repo.find_commit(source_oid).unwrap();
 
-    let target_tree = target_commit.tree().unwrap();
-    let source_tree = source_commit.tree().unwrap();
+    let mut merge_opts = MergeOptions::new();
+    merge_opts.file_favor(git2::FileFavor::Theirs);
 
-    let diff = repo
-        .diff_tree_to_tree(Some(&target_tree), Some(&source_tree), None)
-        .unwrap();
-    repo.apply(&diff, git2::ApplyLocation::WorkDir, None)
+    repo.merge_commits(&target_commit, &source_commit, Some(&merge_opts))
         .unwrap();
 
     let mut index = repo.index().unwrap();
-    index
-        .add_all(["*"].iter(), git2::IndexAddOption::DEFAULT, None)
-        .unwrap();
+
+    if index.has_conflicts() {
+        index
+            .add_all(["*"].iter(), IndexAddOption::DEFAULT, None)
+            .unwrap();
+        index.write().unwrap();
+    }
+
     let tree_oid = index.write_tree().unwrap();
     let tree = repo.find_tree(tree_oid).unwrap();
+    let commit_message = get_commit_message(&repo, source_oid, target_oid);
 
-    let signature = get_signature();
     repo.commit(
-        Some("HEAD"),
-        &signature,
-        &signature,
+        Some("refs/heads/target"),
+        &sig,
+        &sig,
         &commit_message,
         &tree,
-        &[&target_commit],
+        &[&target_commit, &source_commit],
     )
     .unwrap();
 }
