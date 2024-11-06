@@ -4,11 +4,9 @@ use git2::{BranchType, Repository, Signature};
 use adof::get_adof_dir;
 
 pub mod add;
-pub mod branch;
 pub mod commit;
 pub mod commit_message;
 pub mod git_ignore;
-pub mod merge;
 
 pub fn init_git() {
     let adof_dir = get_adof_dir();
