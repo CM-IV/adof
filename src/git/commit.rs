@@ -7,6 +7,19 @@ pub fn commit() {
     commit_changes(&commit_message);
 }
 
+fn get_signature() -> Signature<'static> {
+    let repo = get_repo();
+    let config = repo.config().unwrap();
+    let name = config
+        .get_string("user.name")
+        .unwrap_or("Unknown".to_string());
+    let email = config
+        .get_string("user.email")
+        .unwrap_or("unknown@example.com".to_string());
+
+    Signature::now(&name, &email).unwrap()
+}
+
 fn commit_changes(commit_message: &str) {
     let repo = get_repo();
     let mut index = repo.index().unwrap();
