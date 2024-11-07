@@ -14,6 +14,7 @@ pub mod auto_update;
 pub mod init;
 pub mod link;
 pub mod list;
+pub mod log;
 pub mod patterns;
 pub mod push;
 pub mod readme;

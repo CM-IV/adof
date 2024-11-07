@@ -1,5 +1,5 @@
 use chrono::Local;
-use git2::{Repository, Signature};
+use git2::Repository;
 
 use adof::get_adof_dir;
 
@@ -7,6 +7,7 @@ pub mod add;
 pub mod commit;
 pub mod commit_message;
 pub mod git_ignore;
+pub mod local;
 
 pub fn init_git() {
     let adof_dir = get_adof_dir();
@@ -17,4 +18,15 @@ pub fn init_git() {
 pub fn get_repo() -> Repository {
     let adof_dir = get_adof_dir();
     Repository::open(adof_dir).unwrap()
+}
+
+fn get_default_branch() -> String {
+    let repo = get_repo();
+    let config = repo.config().unwrap();
+
+    if let Ok(default_branch) = config.get_string("init.defaultBranch") {
+        default_branch.to_string()
+    } else {
+        "master".to_string()
+    }
 }

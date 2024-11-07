@@ -1,3 +1,5 @@
+use git2::Signature;
+
 use crate::git::commit_message::get_commit_message;
 
 use super::*;

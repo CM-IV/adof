@@ -29,7 +29,7 @@ pub mod commands;
 pub mod database;
 pub mod git;
 
-use commands::{add, auto_update, init, link, list, push, remove, uninstall, unlink, update};
+use commands::{add, auto_update, init, link, list, log, push, remove, uninstall, unlink, update};
 
 #[derive(Parser)]
 #[command(name = "adof")]
@@ -139,7 +139,7 @@ async fn main() {
         }
 
         Commands::Log => {
-            println!("Printing last changes.");
+            log::log();
         }
 
         Commands::Commits { number } => {
