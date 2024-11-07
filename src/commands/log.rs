@@ -1,4 +1,4 @@
-use crate::git::{local::get_local_commits, Commit, remote::get_remote_commits};
+use crate::git::{local::get_local_commits, remote::get_remote_commits, Commit};
 
 pub fn log(num: u8, remote: bool) {
     let mut commits_to_display = get_local_commits(num);

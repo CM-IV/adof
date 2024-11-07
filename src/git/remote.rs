@@ -1,6 +1,15 @@
 use super::*;
 
-pub fn get_remote_commits(num: u8) -> Vec<Commit> {
+pub fn get_remote_commits(mut num: u8) -> Vec<Commit> {
+    if !is_remote_exist() {
+        println!("No remote branch is connected");
+        std::process::exit(1);
+    }
+
+    if num == 0 {
+        num = 5;
+    }
+
     let repo = get_repo();
 
     let mut remote = repo.find_remote("origin").unwrap();
