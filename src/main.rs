@@ -19,7 +19,9 @@ pub mod commands;
 pub mod database;
 pub mod git;
 
-use commands::{add, auto_update, init, link, list, log, push, remove, uninstall, unlink, update};
+use commands::{
+    add, auto_update, init, link, list, log, push, remove, summary, uninstall, unlink, update,
+};
 
 #[derive(Parser)]
 #[command(name = "adof")]
@@ -79,6 +81,9 @@ enum Commands {
         remote: bool,
     },
 
+    /// Get the overview of your adof
+    Summary,
+
     /// Deploy the dot files to your system
     Deploy {
         /// Deploy the dot files from a specific commit hash
@@ -135,6 +140,10 @@ async fn main() {
 
         Commands::Log { num, remote } => {
             log::log(*num, *remote);
+        }
+
+        Commands::Summary => {
+            summary::summary();
         }
 
         Commands::Deploy { commit } => {

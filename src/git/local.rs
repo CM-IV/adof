@@ -49,6 +49,10 @@ fn get_only_local_commits() -> Vec<Commit> {
     commits
 }
 
+pub fn get_remote_behind_commits_no() -> usize {
+    get_only_local_commits().len()
+}
+
 fn get_local_commit(num: u8) -> Vec<Commit> {
     let repo = get_repo();
     let head = repo.head().unwrap();

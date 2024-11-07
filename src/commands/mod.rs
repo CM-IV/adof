@@ -19,6 +19,7 @@ pub mod patterns;
 pub mod push;
 pub mod readme;
 pub mod remove;
+pub mod summary;
 pub mod uninstall;
 pub mod unlink;
 pub mod update;
@@ -84,4 +85,9 @@ fn is_file_backedup(original_file: &str) -> bool {
 fn check_for_init() -> bool {
     let database_path = get_database_path();
     fs::exists(&database_path).unwrap()
+}
+
+fn get_pid_file() -> String {
+    let adof_dir = get_adof_dir();
+    format!("{}/do_not_touch/pid.txt", adof_dir)
 }

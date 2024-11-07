@@ -10,12 +10,19 @@ use crate::database::get_table_struct;
 use crate::git::add::git_add;
 
 pub async fn auto_update(min: u64) {
+    if Path::new(&get_pid_file()).exists() {
+        println!("Auto update is already on.");
+        process::exis(1)
+    }
+
     store_pid();
 
     loop {
         update();
         sleep(Duration::from_secs(min * 60)).await;
     }
+
+    delete_pid();
 }
 
 fn update() {
@@ -50,8 +57,11 @@ fn is_to_modify(original_file: &str, backedup_file: &str) -> bool {
 }
 
 fn store_pid() {
-    let adof_dir = get_adof_dir();
-    let pid_file = format!("{}/do_not_touch/pid.txt", adof_dir);
+    let pid_file = get_pid_file();
     let pid = process::id();
     fs::write(&pid_file, pid.to_string()).unwrap();
+}
+
+fn delete_pid() {
+    fs::remove_file(&get_pid_file());
 }
