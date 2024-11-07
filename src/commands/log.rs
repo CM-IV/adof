@@ -4,6 +4,9 @@ pub fn log() {
     let local_commits = get_local_changes();
 
     for commit in local_commits {
-        println!("Commit ID: {:?}, Commit message: {:?}", commit.id, commit.message);
+        println!(
+            "Commit ID: {:?}, Commit message: {:?}",
+            commit.id, commit.message
+        );
     }
 }

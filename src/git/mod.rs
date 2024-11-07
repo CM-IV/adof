@@ -33,3 +33,8 @@ pub fn get_repo() -> Repository {
     let adof_dir = get_adof_dir();
     Repository::open(adof_dir).unwrap()
 }
+
+pub fn is_remote_exist() -> bool {
+    let repo = get_repo();
+    repo.branch_remote_name("origin").is_ok()
+}
