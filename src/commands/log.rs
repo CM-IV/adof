@@ -1,11 +1,14 @@
-use crate::git::local::get_local_changes;
+use crate::git::{local::get_local_changes, Commit};
 
-pub fn log() {
-    let local_commits = get_local_changes();
+pub fn log(num: u8) {
+    let commits_to_display = get_local_changes(num);
+    display_commits(&commits_to_display);
+}
 
-    for commit in local_commits {
+fn display_commits(commits: &Vec<Commit>) {
+    for commit in commits {
         println!(
-            "Commit ID: {:?}, Commit message: {:?}",
+            "Commit id: {:?}, Commit message: {:?}",
             commit.id, commit.message
         );
     }
