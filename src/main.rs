@@ -12,16 +12,6 @@
 //          - when a user deploy from other GitHub repo do not link it only deploy, only link when
 //          user runs the deploy command
 //          - then do a small animation to celebrate🎉
-//
-// log - log the last changes they made
-//      - parameters
-//          - date - list all the changes happened that day
-//          - files - list the changes that happened to that file in particular time
-//          - number - list that nth changes happened to that whole .adof folder
-//          - also they can give additional parameters like 1 or 2 or all or today to list the
-//          changes they made
-//
-// commit - to list the last commit
 
 use clap::{Parser, Subcommand};
 
