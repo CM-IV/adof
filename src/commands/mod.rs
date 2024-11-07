@@ -11,6 +11,7 @@ use crate::database::{get_database_path, get_table_struct};
 
 pub mod add;
 pub mod auto_update;
+pub mod deploy;
 pub mod init;
 pub mod link;
 pub mod list;

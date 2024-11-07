@@ -20,7 +20,8 @@ pub mod database;
 pub mod git;
 
 use commands::{
-    add, auto_update, init, link, list, log, push, remove, summary, uninstall, unlink, update,
+    add, auto_update, deploy, init, link, list, log, push, remove, summary, uninstall, unlink,
+    update,
 };
 
 #[derive(Parser)]
@@ -86,8 +87,12 @@ enum Commands {
 
     /// Deploy the dot files to your system
     Deploy {
+        /// Enter the link of the github repo
+        #[arg(default_value = "")]
+        link: String,
+
         /// Deploy the dot files from a specific commit hash
-        #[arg(default_value = "Latest commit")]
+        #[arg(short, long, default_value = "")]
         commit: String,
     },
 
@@ -146,11 +151,8 @@ async fn main() {
             summary::summary();
         }
 
-        Commands::Deploy { commit } => {
-            println!(
-                "Deploying changes to local system. Commit hash: {:?}",
-                commit
-            );
+        Commands::Deploy { link, commit } => {
+            deploy::deploy(link, commit);
         }
 
         Commands::Unlink => {

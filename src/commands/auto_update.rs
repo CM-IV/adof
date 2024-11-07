@@ -10,6 +10,7 @@ use super::*;
 use crate::database::get_table_struct;
 use crate::git::add::git_add;
 
+#[allow(unreachable_code)]
 pub async fn auto_update(min: u64) {
     if Path::new(&get_pid_file()).exists() {
         process::exit(1) // change to return Ok(()) - because exit prints something to screen when

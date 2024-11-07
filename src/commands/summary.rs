@@ -1,7 +1,12 @@
 use std::path::Path;
 
-use crate::git::{is_remote_exist, Commit, local::{get_local_commits, get_remote_behind_commits_no}, remote::get_remote_commits};
 use crate::database::get_table_struct;
+use crate::git::{
+    is_remote_exist,
+    local::{get_local_commits, get_remote_behind_commits_no},
+    remote::get_remote_commits,
+    Commit,
+};
 
 use super::*;
 
