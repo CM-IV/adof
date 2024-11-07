@@ -1,5 +1,16 @@
+use std::path::Path;
+
+use crate::git::{is_remote_exist, Commit, local::{get_local_commits, get_remote_behind_commits_no}, remote::get_remote_commits};
+use crate::database::get_table_struct;
+
+use super::*;
+
 pub fn summary() {
-    println!("Get the summary");
+    let _ = get_last_local_commit();
+    let _ = get_last_remote_commit();
+    let _ = get_only_local_commits_no();
+    let _ = get_files_being_tracked_no();
+    let _ = is_auto_update_enabled();
 }
 
 fn get_last_local_commit() -> Vec<Commit> {
@@ -24,11 +35,8 @@ fn get_files_being_tracked_no() -> usize {
 }
 
 fn is_auto_update_enabled() -> bool {
-    let mut auto_update = false;
-
-    let pid_file = format!("{}/do_not_touch/pid.txt", get_adof_dir());
-
-    auto_update
+    let pid_file = get_pid_file();
+    Path::new(&pid_file).exists()
 }
 
-fn check_for_update() -> Vec<String> {}
+// fn check_for_update() -> Vec<String> {}

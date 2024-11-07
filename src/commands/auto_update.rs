@@ -1,18 +1,18 @@
 use std::fs;
+use std::path::Path;
 use std::process;
 use std::time::Duration;
 
 use tokio::time::sleep;
 
-use adof::get_adof_dir;
+use super::*;
 
 use crate::database::get_table_struct;
 use crate::git::add::git_add;
 
 pub async fn auto_update(min: u64) {
     if Path::new(&get_pid_file()).exists() {
-        println!("Auto update is already on.");
-        process::exis(1)
+        process::exit(1)
     }
 
     store_pid();
@@ -22,7 +22,7 @@ pub async fn auto_update(min: u64) {
         sleep(Duration::from_secs(min * 60)).await;
     }
 
-    delete_pid();
+    delete_pid_file();
 }
 
 fn update() {
@@ -62,6 +62,6 @@ fn store_pid() {
     fs::write(&pid_file, pid.to_string()).unwrap();
 }
 
-fn delete_pid() {
-    fs::remove_file(&get_pid_file());
+fn delete_pid_file() {
+    fs::remove_file(get_pid_file()).unwrap();
 }
