@@ -9,6 +9,20 @@ pub mod commit_message;
 pub mod git_ignore;
 pub mod local;
 
+pub struct Commit {
+    pub id: String,
+    pub message: String,
+}
+
+impl Commit {
+    fn new(hash: &str, message: &str) -> Self {
+        Self {
+            id: hash.to_string(),
+            message: message.to_string(),
+        }
+    }
+}
+
 pub fn init_git() {
     let adof_dir = get_adof_dir();
     Repository::init(adof_dir).unwrap();
@@ -18,15 +32,4 @@ pub fn init_git() {
 pub fn get_repo() -> Repository {
     let adof_dir = get_adof_dir();
     Repository::open(adof_dir).unwrap()
-}
-
-fn get_default_branch() -> String {
-    let repo = get_repo();
-    let config = repo.config().unwrap();
-
-    if let Ok(default_branch) = config.get_string("init.defaultBranch") {
-        default_branch.to_string()
-    } else {
-        "master".to_string()
-    }
 }
