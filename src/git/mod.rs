@@ -8,6 +8,7 @@ pub mod commit;
 pub mod commit_message;
 pub mod git_ignore;
 pub mod local;
+pub mod remote;
 
 pub struct Commit {
     pub id: String,

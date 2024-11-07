@@ -1,4 +1,6 @@
-pub fn get_remote_commits() -> Vec<Commit> {
+use super::*;
+
+pub fn get_remote_commits(num: u8) -> Vec<Commit> {
     let repo = get_repo();
 
     let mut remote = repo.find_remote("origin").unwrap();
@@ -19,7 +21,7 @@ pub fn get_remote_commits() -> Vec<Commit> {
         let commit = Commit::new(&commit.id().to_string(), commit.message().unwrap());
         commits.push(commit);
 
-        if commits.len() > 255 {
+        if commits.len() > num.into() {
             break;
         }
     }

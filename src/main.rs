@@ -79,13 +79,10 @@ enum Commands {
         /// Get the lastest local changes up to a number
         #[arg(default_value = "0")]
         num: u8,
-    },
 
-    /// Get latest commits from GitHub
-    Commits {
-        /// Get the last nth commits
-        #[arg(default_value = "1")]
-        num: u8,
+        /// Get commits from remote repo
+        #[arg(short, long, default_value = "false")]
+        remote: bool,
     },
 
     /// Deploy the dot files to your system
@@ -142,12 +139,8 @@ async fn main() {
             auto_update::auto_update(*min).await;
         }
 
-        Commands::Log { num } => {
-            log::log(*num);
-        }
-
-        Commands::Commits { num } => {
-            println!("Printing last {} commits", num);
+        Commands::Log { num, remote } => {
+            log::log(*num, *remote);
         }
 
         Commands::Deploy { commit } => {
