@@ -55,7 +55,11 @@ enum Commands {
     Push,
 
     /// Update the changes manually
-    Update,
+    Update {
+        /// Check for updates
+        #[arg(short, long, default_value = "false")]
+        check: bool,
+    },
 
     /// Automatically update the changes
     AutoUpdate {
@@ -121,8 +125,8 @@ async fn main() {
             push::push();
         }
 
-        Commands::Update => {
-            update::update();
+        Commands::Update { check } => {
+            update::update(*check);
         }
 
         Commands::AutoUpdate { min } => {

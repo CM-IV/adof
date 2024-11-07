@@ -3,7 +3,7 @@ use std::fs;
 use crate::database::get_table_struct;
 use crate::git::add::git_add;
 
-pub fn update() {
+pub fn update(check: bool) {
     let mut files_to_update: Vec<(String, String)> = Vec::new();
 
     let table_struct = get_table_struct();
@@ -13,14 +13,13 @@ pub fn update() {
         }
     });
 
-    if !files_to_update.is_empty() {
-        files_to_update
-            .iter()
-            .for_each(|(original_file, backedup_file)| {
-                fs::copy(original_file, backedup_file).unwrap();
-            });
-
-        git_add();
+    if files_to_update.is_empty() {
+        println!("Nothing changed");
+    } else if check {
+        show_files_to_update(&files_to_update);
+    } else {
+        show_files_to_update(&files_to_update);
+        update_changes(&files_to_update);
     }
 }
 
@@ -32,4 +31,20 @@ fn is_to_modify(original_file: &str, backedup_file: &str) -> bool {
     let backedup_file_last_modification = backedup_file_metadata.modified().unwrap();
 
     original_file_last_modification > backedup_file_last_modification
+}
+
+fn show_files_to_update(files_to_update: &[(String, String)]) {
+    files_to_update.iter().for_each(|(original_file, _)| {
+        println!("{:?}", original_file);
+    });
+}
+
+fn update_changes(files_to_update: &[(String, String)]) {
+    files_to_update
+        .iter()
+        .for_each(|(original_file, backedup_file)| {
+            fs::copy(original_file, backedup_file).unwrap();
+        });
+
+    git_add();
 }
