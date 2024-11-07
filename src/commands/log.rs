@@ -1,7 +1,7 @@
-use crate::git::{local::get_local_changes, Commit};
+use crate::git::{local::get_local_commits, Commit};
 
 pub fn log(num: u8) {
-    let commits_to_display = get_local_changes(num);
+    let commits_to_display = get_local_commits(num);
     display_commits(&commits_to_display);
 }
 

@@ -1,16 +1,18 @@
 use super::*;
 
-pub fn get_local_changes(num: u8) -> Vec<Commit> {
-    if num == 0 {
-        let local_commits = get_only_local_commits();
-
-        if local_commits.is_empty() {
-            get_local_commits(5)
-        } else {
-            local_commits
-        }
+pub fn get_local_commits(num: u8) -> Vec<Commit> {
+    if num != 0 {
+        get_local_commit(num)
+    } else if !is_remote_exist() {
+        get_local_commit(5)
     } else {
-        get_local_commits(num)
+        let only_local_changes = get_only_local_commits();
+
+        if only_local_changes.is_empty() {
+            get_local_commit(5)
+        } else {
+            only_local_changes
+        }
     }
 }
 
@@ -47,7 +49,7 @@ fn get_only_local_commits() -> Vec<Commit> {
     commits
 }
 
-fn get_local_commits(num: u8) -> Vec<Commit> {
+fn get_local_commit(num: u8) -> Vec<Commit> {
     let repo = get_repo();
     let head = repo.head().unwrap();
 
