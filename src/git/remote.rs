@@ -30,7 +30,7 @@ pub fn get_remote_commits(mut num: u8) -> Vec<Commit> {
         let commit = Commit::new(&commit.id().to_string(), commit.message().unwrap());
         commits.push(commit);
 
-        if commits.len() > num.into() {
+        if commits.len() == num as usize {
             break;
         }
     }
