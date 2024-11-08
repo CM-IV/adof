@@ -8,20 +8,6 @@ pub mod commit;
 pub mod commit_message;
 pub mod git_ignore;
 
-pub struct Commit {
-    pub id: String,
-    pub message: String,
-}
-
-impl Commit {
-    fn new(hash: &str, message: &str) -> Self {
-        Self {
-            id: hash.to_string(),
-            message: message.to_string(),
-        }
-    }
-}
-
 pub fn init_git() {
     let adof_dir = get_adof_dir();
     Repository::init(adof_dir).unwrap();
