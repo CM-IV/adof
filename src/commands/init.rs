@@ -24,9 +24,12 @@ pub async fn init() {
     create_database();
     create_git_ignore();
 
-    let found_files = find_files();
+    let readme_task = tokio::spawn(async { create_readme().await });
+    let found_files_task = tokio::spawn(async { find_files() });
 
-    create_readme().await;
+    readme_task.await.unwrap();
+    let found_files = found_files_task.await.unwrap();
+
     let selected_files = select_files(found_files);
 
     create_backup_files(&selected_files);
