@@ -36,7 +36,7 @@ pub fn link(repo_link: &str) {
         .fetch(&[branch_name], Some(&mut fetch_options), None)
         .expect("Failed to fetch from remote");
 
-    let local_branch = match repo.find_branch(branch_name, BranchType::Local) {
+    let _local_branch = match repo.find_branch(branch_name, BranchType::Local) {
         Ok(branch) => branch.into_reference(),
         Err(_) => {
             let commit = repo
