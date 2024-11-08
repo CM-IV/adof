@@ -1,7 +1,13 @@
 use crate::git::get_repo;
+use crate::git::is_remote_exist;
 use git2::{BranchType, FetchOptions, RemoteCallbacks};
 
 pub fn link(repo_link: &str) {
+    if is_remote_exist() {
+        println!("Already exist");
+        std::process::exit(1);
+    }
+
     let repo = get_repo();
 
     repo.remote("origin", repo_link)

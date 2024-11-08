@@ -109,7 +109,5 @@ fn get_only_local_commits_no() -> u8 {
         .unwrap();
 
     let count_str = std::str::from_utf8(&output.stdout).unwrap().trim();
-    let count = count_str.parse::<u8>().unwrap();
-
-    count
+    count_str.parse::<u8>().unwrap()
 }
