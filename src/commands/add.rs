@@ -1,5 +1,9 @@
 use std::fs;
-use std::process;
+use std::io::Write;
+use std::path::PathBuf;
+use std::process::{self, Command, Stdio};
+use std::sync::mpsc::{self, Receiver};
+use std::thread;
 
 use glob::glob;
 
@@ -32,24 +36,50 @@ fn get_files_to_add() -> Vec<String> {
     let home_dir = get_home_dir();
     let pattern = format!("{}/**/*", home_dir);
 
-    let mut found_files = Vec::new();
-
-    for entry in glob(&pattern).expect("Failed to read glob pattern") {
-        match entry {
-            Ok(path) => {
-                if path.is_file() {
-                    found_files.push(path);
-                }
+    let (tx, rx) = mpsc::channel();
+    thread::spawn(move || {
+        for entry in glob(&pattern).expect("Failed to read glob pattern") {
+            let path = entry.unwrap();
+            if path.is_file() {
+                tx.send(path).expect("Failed to send file path");
             }
-            Err(e) => eprintln!("Error: {}", e),
         }
-    }
+    });
 
-    let selected_files = select_files(found_files);
+    let selected_files = select_files(rx);
 
     selected_files
         .into_iter()
         .filter(|file| !is_file_backedup(file))
+        .collect::<Vec<String>>()
+}
+
+fn select_files(rx: Receiver<PathBuf>) -> Vec<String> {
+    let mut child = Command::new("fzf")
+        .arg("--preview")
+        .arg("cat {}")
+        .arg("-m")
+        .stdin(Stdio::piped())
+        .stdout(Stdio::piped())
+        .spawn()
+        .expect("Failed to start fzf");
+
+    let mut stdin = child.stdin.take().expect("Failed to open fzf stdin");
+
+    thread::spawn(move || {
+        for path in rx.iter() {
+            if let Some(file_path) = path.to_str() {
+                writeln!(stdin, "{}", file_path).expect("Failed to write to fzf stdin");
+            }
+        }
+    });
+
+    let output = child.wait_with_output().expect("Failed to read fzf output");
+
+    String::from_utf8_lossy(&output.stdout)
+        .trim()
+        .lines()
+        .map(|file| file.to_string())
         .collect::<Vec<String>>()
 }
 
