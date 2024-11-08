@@ -2,7 +2,7 @@ use std::path::Path;
 
 use git2::{build::CheckoutBuilder, Oid, Repository};
 
-use crate::git::get_repo;
+use crate::git::{add::git_add, get_repo};
 use crate::unlink::unlink;
 
 use super::*;
@@ -18,6 +18,7 @@ pub fn deploy(repo_link: &str, commit_id: &str) {
     }
 
     create_and_copy_files();
+    git_add();
 }
 
 fn deploy_with_commit_id(commit_id: &str) {
