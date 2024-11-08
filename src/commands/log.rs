@@ -1,5 +1,5 @@
-use std::process::Command;
 use std::env;
+use std::process::Command;
 
 use adof::get_adof_dir;
 
@@ -8,13 +8,12 @@ use crate::git::get_default_branch;
 pub fn log(num: u8, remote: bool) {
     if remote {
         show_remote_commits(num);
-    } else {
-        if num == 0 {
+    } else if num == 0 {
+        get_only_local_commits_no();
             show_only_local_commits();
         } else {
             show_local_commits(num);
         }
-    }
 }
 
 fn show_local_commits(num: u8) {
@@ -27,8 +26,8 @@ fn show_local_commits(num: u8) {
         .arg("log")
         .arg("--graph")
         .arg("-n")
-        .arg(&num.to_string())
-        .arg(&default_branch)
+        .arg(num.to_string())
+        .arg(default_branch)
         .output()
         .unwrap();
 
@@ -36,8 +35,59 @@ fn show_local_commits(num: u8) {
     println!("{}", stdout);
 }
 
-fn show_remote_commits(num: u8) {}
+fn show_remote_commits(num: u8) {
+    let adof_dir = get_adof_dir();
+    env::set_current_dir(adof_dir).unwrap();
 
-fn show_only_local_commits() {}
+    let remote_branch = "origin/main";
 
-// fn get_only_local_commits_no() -> u8 {5}
+    let output = Command::new("git")
+        .arg("log")
+        .arg("--graph")
+        .arg("-n")
+        .arg(num.to_string())
+        .arg(remote_branch)
+        .output()
+        .unwrap();
+
+    let stdout = std::str::from_utf8(&output.stdout).unwrap();
+    println!("{}", stdout);
+}
+
+fn show_only_local_commits() {
+    let adof_dir = get_adof_dir();
+    env::set_current_dir(adof_dir).unwrap();
+
+    let default_branch = get_default_branch();
+    let diff_branch = format!("{}..{}", "origin/main", default_branch);
+
+    let output = Command::new("git")
+        .arg("log")
+        .arg("--graph")
+        .arg(diff_branch)
+        .output()
+        .unwrap();
+
+    let stdout = std::str::from_utf8(&output.stdout).unwrap();
+    println!("{}", stdout);
+}
+
+fn get_only_local_commits_no() -> u8 {
+    let adof_dir = get_adof_dir();
+    env::set_current_dir(adof_dir).unwrap();
+
+    let default_branch = get_default_branch();
+    let diff_branch = format!("{}..{}", "origin/main", default_branch);
+
+    let output = Command::new("git")
+        .arg("rev-list")
+        .arg("--count")
+        .arg(diff_branch)
+        .output()
+        .unwrap();
+
+    let count_str = std::str::from_utf8(&output.stdout).unwrap().trim();
+    let count = count_str.parse::<u8>().unwrap();
+    
+    count
+}
