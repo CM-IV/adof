@@ -38,3 +38,14 @@ pub fn get_repo() -> Repository {
 pub fn is_remote_exist() -> bool {
     get_repo().find_remote("origin").is_ok()
 }
+
+pub fn get_default_branch() -> String {
+    let repo = get_repo();
+    let config = repo.config().unwrap();
+
+    if let Ok(default_branch) = config.get_string("init.defaultBranch") {
+        default_branch.to_string()
+    } else {
+        "master".to_string()
+    }
+}
