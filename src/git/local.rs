@@ -19,27 +19,49 @@ pub fn get_local_commits(num: u8) -> Vec<Commit> {
 fn get_only_local_commits() -> Vec<Commit> {
     let repo = get_repo();
 
-    let local_branch = repo.head().unwrap().peel_to_commit().unwrap();
+    let mut remote = repo
+        .find_remote("origin")
+        .expect("Failed to find remote 'origin'");
 
-    let remote_name = "origin";
-    let branch_name = "main";
-    let remote_branch = repo
-        .find_branch(
-            &format!("{}/{}", remote_name, branch_name),
-            git2::BranchType::Remote,
-        )
-        .unwrap();
-    let remote_commit = remote_branch.get().peel_to_commit().unwrap();
+    remote
+        .fetch(&["refs/heads/main:refs/remotes/origin/main"], None, None)
+        .unwrap_or_else(|e| {
+            println!("Failed to fetch from remote: {}", e);
+            std::process::exit(1);
+        });
 
-    let mut revwalk = repo.revwalk().unwrap();
-    revwalk.push(local_branch.id()).unwrap();
-    revwalk.hide(remote_commit.id()).unwrap();
+    let local_oid = repo
+        .refname_to_id("refs/heads/main")
+        .expect("Local branch 'main' not found");
+
+    let remote_oid = match repo.refname_to_id("refs/remotes/origin/main") {
+        Ok(oid) => oid,
+        Err(_) => {
+            println!("Remote branch 'origin/main' not found after fetch.");
+            return vec![];
+        }
+    };
+
+    let local_commit = repo
+        .find_commit(local_oid)
+        .expect("Failed to find local commit");
+    let remote_commit = repo
+        .find_commit(remote_oid)
+        .expect("Failed to find remote commit");
+
+    let mut revwalk = repo.revwalk().expect("Failed to create revwalk");
+    revwalk
+        .push(local_commit.id())
+        .expect("Failed to push local commit");
+    revwalk
+        .hide(remote_commit.id())
+        .expect("Failed to hide remote commit");
 
     let mut commits = Vec::new();
-
-    for oid in revwalk {
-        let commit = repo.find_commit(oid.unwrap()).unwrap();
-
+    for commit_id in revwalk {
+        let commit = repo
+            .find_commit(commit_id.unwrap())
+            .expect("Failed to find commit");
         commits.push(Commit::new(
             &commit.id().to_string(),
             commit.message().unwrap(),

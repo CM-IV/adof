@@ -36,6 +36,5 @@ pub fn get_repo() -> Repository {
 }
 
 pub fn is_remote_exist() -> bool {
-    let repo = get_repo();
-    repo.branch_remote_name("origin").is_ok()
+    get_repo().find_remote("origin").is_ok()
 }
