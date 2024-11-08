@@ -10,10 +10,26 @@ pub fn log(num: u8, remote: bool) {
         show_remote_commits(num);
     } else if num == 0 {
         get_only_local_commits_no();
-            show_only_local_commits();
+        show_only_local_commits();
+    } else {
+        show_local_commits(num);
+    }
+}
+
+fn highlight_git_log(log: &str) -> String {
+    let mut highlighted = String::new();
+    for line in log.lines() {
+        if line.starts_with("commit ") {
+            highlighted.push_str(&format!("\x1b[32m{}\x1b[0m\n", line)); // Green for commit hash
+        } else if line.starts_with("Author: ") {
+            highlighted.push_str(&format!("\x1b[34m{}\x1b[0m\n", line)); // Blue for author
+        } else if line.starts_with("Date: ") {
+            highlighted.push_str(&format!("\x1b[35m{}\x1b[0m\n", line)); // Magenta for date
         } else {
-            show_local_commits(num);
+            highlighted.push_str(&format!("{}\n", line)); // No color for other lines
         }
+    }
+    highlighted
 }
 
 fn show_local_commits(num: u8) {
@@ -25,6 +41,7 @@ fn show_local_commits(num: u8) {
     let output = Command::new("git")
         .arg("log")
         .arg("--graph")
+        .arg("--color=always")
         .arg("-n")
         .arg(num.to_string())
         .arg(default_branch)
@@ -32,7 +49,8 @@ fn show_local_commits(num: u8) {
         .unwrap();
 
     let stdout = std::str::from_utf8(&output.stdout).unwrap();
-    println!("{}", stdout);
+    let highlighted_log = highlight_git_log(stdout);
+    println!("{}", highlighted_log);
 }
 
 fn show_remote_commits(num: u8) {
@@ -44,6 +62,7 @@ fn show_remote_commits(num: u8) {
     let output = Command::new("git")
         .arg("log")
         .arg("--graph")
+        .arg("--color=always")
         .arg("-n")
         .arg(num.to_string())
         .arg(remote_branch)
@@ -51,7 +70,8 @@ fn show_remote_commits(num: u8) {
         .unwrap();
 
     let stdout = std::str::from_utf8(&output.stdout).unwrap();
-    println!("{}", stdout);
+    let highlighted_log = highlight_git_log(stdout);
+    println!("{}", highlighted_log);
 }
 
 fn show_only_local_commits() {
@@ -64,12 +84,14 @@ fn show_only_local_commits() {
     let output = Command::new("git")
         .arg("log")
         .arg("--graph")
+        .arg("--color=always")
         .arg(diff_branch)
         .output()
         .unwrap();
 
     let stdout = std::str::from_utf8(&output.stdout).unwrap();
-    println!("{}", stdout);
+    let highlighted_log = highlight_git_log(stdout);
+    println!("{}", highlighted_log);
 }
 
 fn get_only_local_commits_no() -> u8 {
@@ -88,6 +110,6 @@ fn get_only_local_commits_no() -> u8 {
 
     let count_str = std::str::from_utf8(&output.stdout).unwrap().trim();
     let count = count_str.parse::<u8>().unwrap();
-    
+
     count
 }
