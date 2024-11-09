@@ -9,19 +9,17 @@ pub fn log(num: u8, remote: bool) {
     if remote && is_remote_exist() {
         show_remote_commits(num);
     } else if num == 0 && is_remote_exist() {
-        get_only_local_commits_no(); // remove it from here, it is here just for avoid compiler
-                                     // warning
+        if get_only_local_commits_no() == 0 {
+            println!("Everything is upto date.");
+            show_local_commits(5);
+        }
         show_only_local_commits();
     } else {
         show_local_commits(num);
     }
 }
 
-fn show_local_commits(mut num: u8) {
-    if num == 0 {
-        num = 5
-    }
-
+fn show_local_commits(num: u8) {
     let adof_dir = get_adof_dir();
     env::set_current_dir(adof_dir).unwrap();
 
@@ -41,7 +39,11 @@ fn show_local_commits(mut num: u8) {
     println!("{}", stdout);
 }
 
-fn show_remote_commits(num: u8) {
+fn show_remote_commits(mut num: u8) {
+    if num == 0 {
+        num = 5;
+    }
+
     let adof_dir = get_adof_dir();
     env::set_current_dir(adof_dir).unwrap();
 
@@ -96,5 +98,5 @@ fn get_only_local_commits_no() -> u8 {
 
     let count_str = std::str::from_utf8(&output.stdout).unwrap().trim();
     println!("{:?}", count_str);
-    count_str.parse::<u8>().unwrap()
+    count_str.parse::<u8>().unwrap_or_default()
 }
