@@ -75,3 +75,8 @@ pub fn link_remote(repo_link: &str) {
 
     println!("Remote linked, branch tracking configured, and commits pushed if necessary.");
 }
+
+pub fn unlink_remote() {
+    let repo = get_repo();
+    repo.remote_delete("origin").unwrap();
+}

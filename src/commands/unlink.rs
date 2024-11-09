@@ -1,10 +1,8 @@
-use crate::git::{get_repo, is_remote_exist};
+use crate::git::{is_remote_exist, remote::unlink_remote};
 
 pub fn unlink() {
-    let repo = get_repo();
-
     if is_remote_exist() {
-        repo.remote_delete("origin").unwrap();
+        unlink_remote();
     } else {
         println!("first connect to remote");
     }
