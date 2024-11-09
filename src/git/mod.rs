@@ -7,6 +7,7 @@ pub mod add;
 pub mod commit;
 pub mod commit_message;
 pub mod git_ignore;
+pub mod remote;
 
 pub fn init_git() {
     let adof_dir = get_adof_dir();
