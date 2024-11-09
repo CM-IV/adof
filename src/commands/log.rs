@@ -66,7 +66,7 @@ fn show_only_local_commits() {
     env::set_current_dir(adof_dir).unwrap();
 
     let default_branch = get_default_branch();
-    let diff_branch = format!("{}..{}", "origin/main", default_branch);
+    let diff_branch = format!("origin/main..{}", default_branch);
 
     let output = Command::new("git")
         .arg("log")
@@ -85,7 +85,7 @@ fn get_only_local_commits_no() -> u8 {
     env::set_current_dir(adof_dir).unwrap();
 
     let default_branch = get_default_branch();
-    let diff_branch = format!("{}..{}", "origin/main", default_branch);
+    let diff_branch = format!("origin/main..{}", default_branch);
 
     let output = Command::new("git")
         .arg("rev-list")
@@ -95,5 +95,6 @@ fn get_only_local_commits_no() -> u8 {
         .unwrap();
 
     let count_str = std::str::from_utf8(&output.stdout).unwrap().trim();
+    println!("{:?}", count_str);
     count_str.parse::<u8>().unwrap()
 }

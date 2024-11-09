@@ -2,7 +2,7 @@ use std::path::Path;
 
 use git2::{build::CheckoutBuilder, Oid, Repository};
 
-use crate::git::{init_git, add::git_add, get_repo};
+use crate::git::{add::git_add, get_repo, init_git};
 use crate::unlink::unlink;
 
 use super::*;

@@ -1,10 +1,10 @@
-use crate::git::get_repo;
-use crate::git::is_remote_exist;
+use crate::git::{get_repo, is_remote_exist};
+use crate::push::push;
 use git2::{BranchType, FetchOptions, RemoteCallbacks};
 
 pub fn link(repo_link: &str) {
     if is_remote_exist() {
-        println!("Already exist");
+        println!("Already exists");
         std::process::exit(1);
     }
 
@@ -13,13 +13,16 @@ pub fn link(repo_link: &str) {
     repo.remote("origin", repo_link)
         .expect("Failed to add remote");
 
-    let branch_name = "main";
+    push();
 
+    let branch_name = "main";
     let mut config = repo.config().expect("Failed to get config");
+
     let remote_key = format!("branch.{}.remote", branch_name);
     config
         .set_str(&remote_key, "origin")
         .expect("Failed to set remote branch");
+
     let merge_key = format!("branch.{}.merge", branch_name);
     config
         .set_str(&merge_key, &format!("refs/heads/{}", branch_name))
@@ -27,6 +30,7 @@ pub fn link(repo_link: &str) {
 
     let mut fetch_options = FetchOptions::new();
     let mut callbacks = RemoteCallbacks::new();
+
     callbacks.transfer_progress(|stats| {
         println!(
             "Received {} objects in {} bytes",
@@ -42,21 +46,35 @@ pub fn link(repo_link: &str) {
         .fetch(&[branch_name], Some(&mut fetch_options), None)
         .expect("Failed to fetch from remote");
 
-    let _local_branch = match repo.find_branch(branch_name, BranchType::Local) {
-        Ok(branch) => branch.into_reference(),
+    let origin_main_ref = repo.find_reference("refs/remotes/origin/main");
+    if origin_main_ref.is_err() {
+        println!("Remote repository does not have a 'main' branch.");
+        std::process::exit(1);
+    }
+
+    let local_branch = match repo.find_branch(branch_name, BranchType::Local) {
+        Ok(branch) => branch,
         Err(_) => {
-            let commit = repo
-                .find_reference("refs/remotes/origin/main")
-                .and_then(|r| r.peel_to_commit())
+            let commit = origin_main_ref
+                .as_ref()
+                .unwrap()
+                .peel_to_commit()
                 .expect("Failed to find remote main branch commit");
             repo.branch(branch_name, &commit, false)
                 .expect("Failed to create local branch")
-                .into_reference()
         }
     };
+
+    local_branch
+        .into_reference()
+        .set_target(
+            origin_main_ref.unwrap().target().unwrap(),
+            "Setting up tracking",
+        )
+        .expect("Failed to set local branch to track origin");
 
     repo.set_head("refs/heads/main")
         .expect("Failed to set head");
 
-    println!("Remote linked and branch tracking configured.");
+    println!("Remote linked, branch tracking configured, and commits pushed if necessary.");
 }
