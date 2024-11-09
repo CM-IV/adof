@@ -29,8 +29,11 @@ fn deploy_from_local(commit_id: &str) {
         create_and_copy_files();
 
         let mut checkout_builder = CheckoutBuilder::new();
-        repo.checkout_tree(original_commit.tree().unwrap().as_object(), Some(&mut checkout_builder))
-            .unwrap();
+        repo.checkout_tree(
+            original_commit.tree().unwrap().as_object(),
+            Some(&mut checkout_builder),
+        )
+        .unwrap();
 
         repo.set_head("refs/heads/main").unwrap();
 

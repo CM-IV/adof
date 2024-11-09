@@ -5,7 +5,7 @@ use std::{
     path::{self, PathBuf},
 };
 
-use sha2::{Sha256, Digest};
+use sha2::{Digest, Sha256};
 
 use adof::{get_adof_dir, get_home_dir};
 
