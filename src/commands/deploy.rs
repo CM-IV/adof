@@ -22,7 +22,6 @@ fn deploy_from_local(commit_id: &str) {
 
         let original_head = repo.head().unwrap();
         let original_commit = original_head.peel_to_commit().unwrap();
-        //let main_branch = repo.find_branch("main", git2::BranchType::Local).unwrap();
 
         deploy_with_commit_id(commit_id);
 
