@@ -18,22 +18,21 @@ pub fn deploy(repo_link: &str, commit_id: &str) {
 
 fn deploy_from_local(commit_id: &str) {
     if !commit_id.is_empty() {
+        let repo = get_repo();
+
+        let original_head = repo.head().unwrap();
+        let original_commit = original_head.peel_to_commit().unwrap();
+        //let main_branch = repo.find_branch("main", git2::BranchType::Local).unwrap();
+
         deploy_with_commit_id(commit_id);
 
         create_and_copy_files();
 
-        let repo = get_repo();
-
-        let head_ref = repo.head().unwrap();
-        let head_commit = head_ref.peel_to_commit().unwrap();
-        let head_tree = head_commit.tree().unwrap();
-        let head_tree_obj = head_tree.as_object();
-
         let mut checkout_builder = CheckoutBuilder::new();
-        repo.checkout_tree(head_tree_obj, Some(&mut checkout_builder))
+        repo.checkout_tree(original_commit.tree().unwrap().as_object(), Some(&mut checkout_builder))
             .unwrap();
 
-        repo.set_head_detached(head_commit.id()).unwrap();
+        repo.set_head("refs/heads/main").unwrap();
 
         update(false);
     } else {
@@ -54,7 +53,7 @@ fn deploy_with_commit_id(commit_id: &str) {
     repo.checkout_tree(tree_obj, Some(&mut checkout_builder))
         .unwrap();
 
-    repo.set_head(commit_id).unwrap();
+    repo.set_head_detached(oid).unwrap();
 }
 
 fn deploy_from_remote(repo_link: &str, commit_id: &str) {

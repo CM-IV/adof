@@ -1,9 +1,11 @@
-use std::io::Write;
+use std::io::{Read, Write};
 use std::process::{Command, Stdio};
 use std::{
     fs,
     path::{self, PathBuf},
 };
+
+use sha2::{Sha256, Digest};
 
 use adof::{get_adof_dir, get_home_dir};
 
@@ -76,6 +78,15 @@ pub fn create_file(original_file: &str) -> String {
     fs::File::create(&backup_file).unwrap();
 
     backup_file
+}
+
+fn calculate_file_hash(file_path: &str) -> Vec<u8> {
+    let mut file = fs::File::open(file_path).unwrap();
+    let mut hasher = Sha256::new();
+    let mut buffer = Vec::new();
+    file.read_to_end(&mut buffer).unwrap();
+    hasher.update(&buffer);
+    hasher.finalize().to_vec()
 }
 
 fn is_file_backedup(original_file: &str) -> bool {
