@@ -49,13 +49,9 @@ fn update() {
 }
 
 fn is_to_modify(original_file: &str, backedup_file: &str) -> bool {
-    let original_file_metadata = fs::metadata(original_file).unwrap();
-    let backedup_file_metadata = fs::metadata(backedup_file).unwrap();
-
-    let original_file_last_modification = original_file_metadata.modified().unwrap();
-    let backedup_file_last_modification = backedup_file_metadata.modified().unwrap();
-
-    original_file_last_modification > backedup_file_last_modification
+    let original_hash = calculate_file_hash(original_file);
+    let backup_hash = calculate_file_hash(backedup_file);
+    original_hash != backup_hash
 }
 
 fn store_pid() {

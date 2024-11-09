@@ -3,6 +3,8 @@ use std::fs;
 use crate::database::get_table_struct;
 use crate::git::add::git_add;
 
+use super::*;
+
 pub fn update(check: bool) {
     let mut files_to_update: Vec<(String, String)> = Vec::new();
 
@@ -24,8 +26,8 @@ pub fn update(check: bool) {
 }
 
 fn is_to_modify(original_file: &str, backedup_file: &str) -> bool {
-    let original_hash = calculate_file_hash(original_file).unwrap();
-    let backup_hash = calculate_file_hash(backedup_file).unwrap();
+    let original_hash = calculate_file_hash(original_file);
+    let backup_hash = calculate_file_hash(backedup_file);
     original_hash != backup_hash
 }
 
