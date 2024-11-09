@@ -1,8 +1,11 @@
 use std::fs;
 use std::path::Path;
 
+use adof::get_adof_dir;
+
 pub fn list() {
-    let path = Path::new("/home/abinash/.adof");
+    let adof_dir = get_adof_dir();
+    let path = Path::new(&adof_dir);
     println!("Root 📦 {}", path.display());
     print_directory(path, "");
 }
