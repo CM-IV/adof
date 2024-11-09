@@ -1,8 +1,9 @@
 use std::path::Path;
+use std::fs;
 
 use git2::{build::CheckoutBuilder, Oid, Repository};
 
-use crate::git::{add::git_add, get_repo, init_git};
+use crate::git::{get_repo, init_git};
 use crate::unlink::unlink;
 
 use super::*;
@@ -35,6 +36,10 @@ fn deploy_with_commit_id(commit_id: &str) {
 }
 
 fn deploy_from_remote(repo_link: &str, commit_id: &str) {
+    if check_for_init() {
+        empty_adof_dir();
+    }
+
     let adof_dir = get_adof_dir();
     Repository::clone(repo_link, &adof_dir).unwrap();
 
@@ -49,7 +54,11 @@ fn deploy_from_remote(repo_link: &str, commit_id: &str) {
     fs::remove_dir_all(git_dir).unwrap();
 
     init_git();
-    git_add();
+}
+
+fn empty_adof_dir() {
+    let adof_dir = get_adof_dir();
+    fs::remove_dir_all(&adof_dir).unwrap();
 }
 
 fn create_and_copy_files() {
