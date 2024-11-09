@@ -2,7 +2,7 @@ use std::path::Path;
 
 use git2::{build::CheckoutBuilder, Oid, Repository};
 
-use crate::git::{add::git_add, get_repo};
+use crate::git::{init_git, add::git_add, get_repo};
 use crate::unlink::unlink;
 
 use super::*;
@@ -16,9 +16,6 @@ pub fn deploy(repo_link: &str, commit_id: &str) {
     } else {
         deploy_from_remote(repo_link, commit_id);
     }
-
-    create_and_copy_files();
-    git_add();
 }
 
 fn deploy_with_commit_id(commit_id: &str) {
@@ -39,13 +36,20 @@ fn deploy_with_commit_id(commit_id: &str) {
 
 fn deploy_from_remote(repo_link: &str, commit_id: &str) {
     let adof_dir = get_adof_dir();
-    Repository::clone(repo_link, adof_dir).unwrap();
+    Repository::clone(repo_link, &adof_dir).unwrap();
 
     if !commit_id.is_empty() {
         deploy_with_commit_id(commit_id);
     }
 
     unlink();
+    create_and_copy_files();
+
+    let git_dir = format!("{}/.git", adof_dir);
+    fs::remove_dir_all(git_dir).unwrap();
+
+    init_git();
+    git_add();
 }
 
 fn create_and_copy_files() {
