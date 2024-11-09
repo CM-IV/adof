@@ -1,21 +1,43 @@
-use std::path::Path;
 use std::fs;
+use std::path::Path;
 
 use git2::{build::CheckoutBuilder, Oid, Repository};
 
 use crate::git::{get_repo, init_git};
-use crate::unlink::unlink;
+use crate::update::update;
 
 use super::*;
 
 pub fn deploy(repo_link: &str, commit_id: &str) {
-    if repo_link.is_empty() && commit_id.is_empty() {
-        println!("Provide a link or commit");
-        std::process::exit(1);
-    } else if repo_link.is_empty() {
-        deploy_with_commit_id(commit_id);
+    if repo_link.is_empty() {
+        deploy_from_local(commit_id);
     } else {
         deploy_from_remote(repo_link, commit_id);
+    }
+}
+
+fn deploy_from_local(commit_id: &str) {
+    if !commit_id.is_empty() {
+        deploy_with_commit_id(commit_id);
+
+        create_and_copy_files();
+
+        let repo = get_repo();
+
+        let head_ref = repo.head().unwrap();
+        let head_commit = head_ref.peel_to_commit().unwrap();
+        let head_tree = head_commit.tree().unwrap();
+        let head_tree_obj = head_tree.as_object();
+
+        let mut checkout_builder = CheckoutBuilder::new();
+        repo.checkout_tree(head_tree_obj, Some(&mut checkout_builder))
+            .unwrap();
+
+        repo.set_head_detached(head_commit.id()).unwrap();
+
+        update(false);
+    } else {
+        create_and_copy_files();
     }
 }
 
@@ -32,7 +54,7 @@ fn deploy_with_commit_id(commit_id: &str) {
     repo.checkout_tree(tree_obj, Some(&mut checkout_builder))
         .unwrap();
 
-    repo.set_head_detached(oid).unwrap();
+    repo.set_head(commit_id).unwrap();
 }
 
 fn deploy_from_remote(repo_link: &str, commit_id: &str) {
@@ -47,7 +69,6 @@ fn deploy_from_remote(repo_link: &str, commit_id: &str) {
         deploy_with_commit_id(commit_id);
     }
 
-    unlink();
     create_and_copy_files();
 
     let git_dir = format!("{}/.git", adof_dir);
