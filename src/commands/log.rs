@@ -3,36 +3,25 @@ use std::process::Command;
 
 use adof::get_adof_dir;
 
-use crate::git::get_default_branch;
+use crate::git::{get_default_branch, is_remote_exist};
 
 pub fn log(num: u8, remote: bool) {
-    if remote {
+    if remote && is_remote_exist() {
         show_remote_commits(num);
-    } else if num == 0 {
-        get_only_local_commits_no();
+    } else if num == 0 && is_remote_exist() {
+        get_only_local_commits_no(); // remove it from here, it is here just for avoid compiler
+                                     // warning
         show_only_local_commits();
     } else {
         show_local_commits(num);
     }
 }
 
-fn highlight_git_log(log: &str) -> String {
-    let mut highlighted = String::new();
-    for line in log.lines() {
-        if line.starts_with("commit ") {
-            highlighted.push_str(&format!("\x1b[32m{}\x1b[0m\n", line)); // Green for commit hash
-        } else if line.starts_with("Author: ") {
-            highlighted.push_str(&format!("\x1b[34m{}\x1b[0m\n", line)); // Blue for author
-        } else if line.starts_with("Date: ") {
-            highlighted.push_str(&format!("\x1b[35m{}\x1b[0m\n", line)); // Magenta for date
-        } else {
-            highlighted.push_str(&format!("{}\n", line)); // No color for other lines
-        }
+fn show_local_commits(mut num: u8) {
+    if num == 0 {
+        num = 5
     }
-    highlighted
-}
 
-fn show_local_commits(num: u8) {
     let adof_dir = get_adof_dir();
     env::set_current_dir(adof_dir).unwrap();
 
@@ -49,8 +38,7 @@ fn show_local_commits(num: u8) {
         .unwrap();
 
     let stdout = std::str::from_utf8(&output.stdout).unwrap();
-    let highlighted_log = highlight_git_log(stdout);
-    println!("{}", highlighted_log);
+    println!("{}", stdout);
 }
 
 fn show_remote_commits(num: u8) {
@@ -70,8 +58,7 @@ fn show_remote_commits(num: u8) {
         .unwrap();
 
     let stdout = std::str::from_utf8(&output.stdout).unwrap();
-    let highlighted_log = highlight_git_log(stdout);
-    println!("{}", highlighted_log);
+    println!("{}", stdout);
 }
 
 fn show_only_local_commits() {
@@ -90,8 +77,7 @@ fn show_only_local_commits() {
         .unwrap();
 
     let stdout = std::str::from_utf8(&output.stdout).unwrap();
-    let highlighted_log = highlight_git_log(stdout);
-    println!("{}", highlighted_log);
+    println!("{}", stdout);
 }
 
 fn get_only_local_commits_no() -> u8 {
