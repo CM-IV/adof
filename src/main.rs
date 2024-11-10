@@ -1,7 +1,9 @@
 use clap::{Parser, Subcommand};
 use serde::{Deserialize, Serialize};
+use error_stack::Result;
 
 pub mod validate;
+pub mod error;
 
 #[derive(Parser, Debug)]
 #[command(name = "adof")]
@@ -91,7 +93,7 @@ struct Command {
     args: Vec<String>,
 }
 
-fn main() {
+fn main() -> Result<(), error::AdofError> {
     let cli = Cli::parse();
 
     let (command_name, args) = match &cli.command {
@@ -104,24 +106,30 @@ fn main() {
         Commands::List => ("List", vec![]),
 
         Commands::Link { link } => {
-            validate::validate_github_repo(&link);
+            validate::github_repo(&link);
             ("Link", vec![link.clone()])
-        },
+        }
 
         Commands::Push => ("Push", vec![]),
 
         Commands::Update { check } => ("Update", vec![check.to_string()]),
 
-        Commands::AutoUpdate { min } => ("AutoUpdate", vec![min.to_string()]),
+        Commands::AutoUpdate { min } => {
+            validate::auto_update_time(*min)?;
+            ("AutoUpdate", vec![min.to_string()])
+        }
 
-        Commands::Log { num, remote } => ("Log", vec![num.to_string(), remote.to_string()]),
+        Commands::Log { num, remote } => {
+            validate::log_counts(*num)?;
+            ("Log", vec![num.to_string(), remote.to_string()])
+        }
 
         Commands::Summary => ("Summary", vec![]),
 
         Commands::Deploy { link, commit } => {
-            validate::validate_github_repo(&link);
+            validate::github_repo(&link);
             ("Deploy", vec![link.clone(), commit.clone()])
-        },
+        }
 
         Commands::Unlink => ("Unlink", vec![]),
 
@@ -138,4 +146,6 @@ fn main() {
     let json_data = serde_json::to_string(&command).expect("Failed to serialize");
 
     commands::process_command(&json_data);
+
+    Ok(())
 }

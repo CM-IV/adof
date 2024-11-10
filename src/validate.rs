@@ -1,3 +1,23 @@
-pub fn validate_github_repo(repo_link: &str) {}
+use error_stack::{ensure, Report};
 
-pub fn validate_auto_update_time(min: u64) {}
+use crate::error::AdofError;
+
+pub fn github_repo(repo_link: &str) {}
+
+pub fn auto_update_time(min: u64) -> Result<(), Report<AdofError>> {
+    ensure!(min >= 10, AdofError::TooFashUpdateTime {
+        expected: 10,
+        found: min
+    });
+
+    Ok(())
+}
+
+pub fn log_counts(num: u8) -> Result<(), Report<AdofError>> {
+    ensure!(num <= 100, AdofError::TooManyLogs {
+        expected: "Less than 100".to_string(),
+        found: num
+    });
+
+    Ok(())
+}
