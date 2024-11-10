@@ -14,6 +14,7 @@
 //          - then do a small animation to celebrate🎉
 
 use clap::{Parser, Subcommand};
+use anyhow::Result;
 
 pub mod commands;
 pub mod database;
@@ -107,7 +108,7 @@ enum Commands {
 }
 
 #[tokio::main]
-async fn main() {
+async fn main() -> Result<()> {
     let cli = Cli::parse();
 
     match &cli.command {
@@ -167,4 +168,6 @@ async fn main() {
             webbrowser::open("https://github.com/sponsors/fnabinash").unwrap();
         }
     }
+
+    Ok(())
 }
