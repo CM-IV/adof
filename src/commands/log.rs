@@ -5,23 +5,25 @@ use adof::get_adof_dir;
 
 use crate::git::{get_default_branch, is_remote_exist};
 
-pub fn log(num: u8, remote: bool) {
+pub fn log(num: u8, remote: bool) -> Result<()> {
     if remote && is_remote_exist() {
-        show_remote_commits(num);
+        show_remote_commits(num)?;
     } else if num == 0 && is_remote_exist() {
-        if get_only_local_commits_no() == 0 {
+        if get_only_local_commits_no()? == 0 {
             println!("Everything is upto date.");
-            show_local_commits(5);
+            show_local_commits(5)?;
         }
-        show_only_local_commits();
+        show_only_local_commits()?;
     } else {
-        show_local_commits(num);
+        show_local_commits(num)?;
     }
+
+    Ok(())
 }
 
-fn show_local_commits(num: u8) {
-    let adof_dir = get_adof_dir();
-    env::set_current_dir(adof_dir).unwrap();
+fn show_local_commits(num: u8) -> Result<()> {
+    let adof_dir = get_adof_dir()?;
+    env::set_current_dir(adof_dir)?;
 
     let default_branch = get_default_branch();
 
@@ -32,20 +34,20 @@ fn show_local_commits(num: u8) {
         .arg("-n")
         .arg(num.to_string())
         .arg(default_branch)
-        .output()
-        .unwrap();
+        .output()?;
 
-    let stdout = std::str::from_utf8(&output.stdout).unwrap();
+    let stdout = std::str::from_utf8(&output.stdout)?;
     println!("{}", stdout);
+    Ok(())
 }
 
-fn show_remote_commits(mut num: u8) {
+fn show_remote_commits(mut num: u8) -> Result<()> {
     if num == 0 {
         num = 5;
     }
 
-    let adof_dir = get_adof_dir();
-    env::set_current_dir(adof_dir).unwrap();
+    let adof_dir = get_adof_dir()?;
+    env::set_current_dir(adof_dir)?;
 
     let remote_branch = "origin/main";
 
@@ -56,16 +58,16 @@ fn show_remote_commits(mut num: u8) {
         .arg("-n")
         .arg(num.to_string())
         .arg(remote_branch)
-        .output()
-        .unwrap();
+        .output()?;
 
-    let stdout = std::str::from_utf8(&output.stdout).unwrap();
+    let stdout = std::str::from_utf8(&output.stdout)?;
     println!("{}", stdout);
+    Ok(())
 }
 
-fn show_only_local_commits() {
+fn show_only_local_commits() -> Result<()> {
     let adof_dir = get_adof_dir();
-    env::set_current_dir(adof_dir).unwrap();
+    env::set_current_dir(adof_dir)?;
 
     let default_branch = get_default_branch();
     let diff_branch = format!("origin/main..{}", default_branch);
@@ -75,16 +77,16 @@ fn show_only_local_commits() {
         .arg("--graph")
         .arg("--color=always")
         .arg(diff_branch)
-        .output()
-        .unwrap();
+        .output()?;
 
-    let stdout = std::str::from_utf8(&output.stdout).unwrap();
+    let stdout = std::str::from_utf8(&output.stdout)?;
     println!("{}", stdout);
+    Ok(())
 }
 
-fn get_only_local_commits_no() -> u8 {
+fn get_only_local_commits_no() -> Result<u8> {
     let adof_dir = get_adof_dir();
-    env::set_current_dir(adof_dir).unwrap();
+    env::set_current_dir(adof_dir)?;
 
     let default_branch = get_default_branch();
     let diff_branch = format!("origin/main..{}", default_branch);
@@ -93,10 +95,9 @@ fn get_only_local_commits_no() -> u8 {
         .arg("rev-list")
         .arg("--count")
         .arg(diff_branch)
-        .output()
-        .unwrap();
+        .output()?;
 
-    let count_str = std::str::from_utf8(&output.stdout).unwrap().trim();
+    let count_str = std::str::from_utf8(&output.stdout)?.trim();
     println!("{:?}", count_str);
-    count_str.parse::<u8>().unwrap_or_default()
+    Ok(count_str.parse::<u8>().unwrap_or_default())
 }
