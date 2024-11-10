@@ -3,16 +3,17 @@ use std::path::Path;
 
 use adof::get_adof_dir;
 
-pub fn list() {
+pub fn list() -> Result<()> {
     let adof_dir = get_adof_dir();
     let path = Path::new(&adof_dir);
     println!("Root 📦 {}", path.display());
-    print_directory(path, "");
+    print_directory(path, "")?;
+    Ok(())
 }
 
-fn print_directory(path: &Path, prefix: &str) {
+fn print_directory(path: &Path, prefix: &str) -> Result<()> {
     if let Ok(entries) = fs::read_dir(path) {
-        let entries: Vec<_> = entries.collect::<Result<_, _>>().unwrap();
+        let entries: Vec<_> = entries.collect::<Result<_, _>>()?;
         let len = entries.len();
 
         for (i, entry) in entries.iter().enumerate() {
@@ -20,7 +21,7 @@ fn print_directory(path: &Path, prefix: &str) {
             let is_last_entry = i == len - 1;
 
             if path.is_dir() {
-                if path.file_name().unwrap() == ".git" {
+                if path.file_name()? == ".git" {
                     continue;
                 }
 
@@ -33,12 +34,14 @@ fn print_directory(path: &Path, prefix: &str) {
             }
         }
     }
+    Ok(())
 }
 
-fn print_entry(path: &Path, prefix: &str, is_last: bool, is_dir: bool) {
-    let icon = if is_dir { "📂" } else { "📄" };
+fn print_entry(path: &Path, prefix: &str, is_last: bool, is_dir: bool) -> Result<()> {
     let connector = if is_last { "└──" } else { "├──" };
-    let name = path.file_name().unwrap().to_string_lossy();
+    let name = path.file_name()?.to_string_lossy();
 
-    println!("{}{} {} {}", prefix, connector, icon, name);
+    println!("{}{} {}", prefix, connector, name);
+
+    Ok(())
 }
