@@ -4,11 +4,10 @@ use git2::{Delta, DiffOptions};
 
 use super::*;
 
-pub fn get_commit_message() -> Result<String> {
+pub fn get_commit_message() -> String {
     let current_time = get_current_date_and_time();
-    let each_file_status = get_change_logs()?;
-    let commit_message = format!("{}\n\n{}", current_time, each_file_status);
-    Ok(commit_message)
+    let each_file_status = get_change_logs();
+    format!("{}\n\n{}", current_time, each_file_status)
 }
 
 fn get_current_date_and_time() -> String {
@@ -17,20 +16,22 @@ fn get_current_date_and_time() -> String {
     formatted_current_time.to_string()
 }
 
-fn get_change_logs() -> Result<String> {
-    let repo = get_repo()?;
+fn get_change_logs() -> String {
+    let repo = get_repo();
 
     let tree = match repo.head() {
         Ok(head_ref) => {
-            let head_commit = head_ref.peel_to_commit()?;
-            Some(head_commit.tree()?)
+            let head_commit = head_ref.peel_to_commit().unwrap();
+            Some(head_commit.tree().unwrap())
         }
         Err(_) => None,
     };
 
-    let index = repo.index()?;
+    let index = repo.index().unwrap();
     let mut diff_options = DiffOptions::new();
-    let diff = repo.diff_tree_to_index(tree.as_ref(), Some(&index), Some(&mut diff_options))?;
+    let diff = repo
+        .diff_tree_to_index(tree.as_ref(), Some(&index), Some(&mut diff_options))
+        .unwrap();
 
     let mut added_files = HashMap::new();
     let mut removed_files = HashMap::new();
@@ -57,7 +58,8 @@ fn get_change_logs() -> Result<String> {
         } else {
             false
         }
-    })?;
+    })
+    .unwrap();
 
     let change_log = vec![
         ("Files Added", added_files),
@@ -79,6 +81,5 @@ fn get_change_logs() -> Result<String> {
         }
     }
 
-    let file_logs = file_logs.join("\n");
-    Ok(file_logs)
+    file_logs.join("\n")
 }

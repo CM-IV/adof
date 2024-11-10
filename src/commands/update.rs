@@ -5,12 +5,12 @@ use crate::git::add::git_add;
 
 use super::*;
 
-pub fn update(check: bool) -> Result<()> {
+pub fn update(check: bool) {
     let mut files_to_update: Vec<(String, String)> = Vec::new();
 
-    let table_struct = get_table_struct()?;
+    let table_struct = get_table_struct();
     table_struct.table.iter().for_each(|data| {
-        if is_to_modify(data.0, data.1)? {
+        if is_to_modify(data.0, data.1) {
             files_to_update.push((data.0.to_string(), data.1.to_string()));
         }
     });
@@ -21,16 +21,14 @@ pub fn update(check: bool) -> Result<()> {
         show_files_to_update(&files_to_update);
     } else {
         show_files_to_update(&files_to_update);
-        update_changes(&files_to_update)?;
+        update_changes(&files_to_update);
     }
-
-    Ok(())
 }
 
-fn is_to_modify(original_file: &str, backedup_file: &str) -> Result<bool> {
-    let original_hash = calculate_file_hash(original_file)?;
-    let backup_hash = calculate_file_hash(backedup_file)?;
-    Ok(original_hash != backup_hash)
+fn is_to_modify(original_file: &str, backedup_file: &str) -> bool {
+    let original_hash = calculate_file_hash(original_file);
+    let backup_hash = calculate_file_hash(backedup_file);
+    original_hash != backup_hash
 }
 
 fn show_files_to_update(files_to_update: &[(String, String)]) {
@@ -39,13 +37,12 @@ fn show_files_to_update(files_to_update: &[(String, String)]) {
     });
 }
 
-fn update_changes(files_to_update: &[(String, String)]) -> Result<()> {
+fn update_changes(files_to_update: &[(String, String)]) {
     files_to_update
         .iter()
         .for_each(|(original_file, backedup_file)| {
-            fs::copy(original_file, backedup_file)?;
+            fs::copy(original_file, backedup_file).unwrap();
         });
 
     git_add();
-    Ok(())
 }

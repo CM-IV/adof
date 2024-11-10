@@ -13,7 +13,6 @@
 //          user runs the deploy command
 //          - then do a small animation to celebrate🎉
 
-use anyhow::Result;
 use clap::{Parser, Subcommand};
 
 pub mod commands;
@@ -108,24 +107,24 @@ enum Commands {
 }
 
 #[tokio::main]
-async fn main() -> Result<()> {
+async fn main() {
     let cli = Cli::parse();
 
     match &cli.command {
         Commands::Init => {
-            init::init().await?;
+            init::init().await;
         }
 
         Commands::Add => {
-            add::add().await?;
+            add::add().await;
         }
 
         Commands::Remove => {
-            remove::remove()?;
+            remove::remove();
         }
 
         Commands::List => {
-            list::list()?;
+            list::list();
         }
 
         Commands::Link { link } => {
@@ -133,19 +132,19 @@ async fn main() -> Result<()> {
         }
 
         Commands::Push => {
-            push::push()?;
+            push::push();
         }
 
         Commands::Update { check } => {
-            update::update(*check)?;
+            update::update(*check);
         }
 
         Commands::AutoUpdate { min } => {
-            auto_update::auto_update(*min).await?;
+            auto_update::auto_update(*min).await;
         }
 
         Commands::Log { num, remote } => {
-            log::log(*num, *remote)?;
+            log::log(*num, *remote);
         }
 
         Commands::Summary => {
@@ -153,21 +152,19 @@ async fn main() -> Result<()> {
         }
 
         Commands::Deploy { link, commit } => {
-            deploy::deploy(link, commit)?;
+            deploy::deploy(link, commit);
         }
 
         Commands::Unlink => {
-            unlink::unlink()?;
+            unlink::unlink();
         }
 
         Commands::Uninstall => {
-            uninstall::uninstall()?;
+            uninstall::uninstall();
         }
 
         Commands::Sponsor => {
-            webbrowser::open("https://github.com/sponsors/fnabinash")?;
+            webbrowser::open("https://github.com/sponsors/fnabinash").unwrap();
         }
     }
-
-    Ok(())
 }

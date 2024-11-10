@@ -4,16 +4,14 @@ use crate::git::commit_message::get_commit_message;
 
 use super::*;
 
-pub fn commit() -> Result<()> {
-    let commit_message = get_commit_message()?;
+pub fn commit() {
+    let commit_message = get_commit_message();
     commit_changes(&commit_message);
-    Ok(())
 }
 
-fn get_signature() -> Result<Signature<'static>> {
-    let repo = get_repo()?;
-    let config = repo.config()?;
-
+fn get_signature() -> Signature<'static> {
+    let repo = get_repo();
+    let config = repo.config().unwrap();
     let name = config
         .get_string("user.name")
         .unwrap_or("Unknown".to_string());
@@ -21,22 +19,22 @@ fn get_signature() -> Result<Signature<'static>> {
         .get_string("user.email")
         .unwrap_or("unknown@example.com".to_string());
 
-    Ok(Signature::now(&name, &email)?)
+    Signature::now(&name, &email).unwrap()
 }
 
-fn commit_changes(commit_message: &str) -> Result<()> {
-    let repo = get_repo()?;
-    let mut index = repo.index()?;
+fn commit_changes(commit_message: &str) {
+    let repo = get_repo();
+    let mut index = repo.index().unwrap();
 
-    let tree_id = index.write_tree()?;
-    let tree = repo.find_tree(tree_id)?;
+    let tree_id = index.write_tree().unwrap();
+    let tree = repo.find_tree(tree_id).unwrap();
 
     let parent_commit = match repo.head() {
-        Ok(head_ref) => Some(head_ref.peel_to_commit()?),
+        Ok(head_ref) => Some(head_ref.peel_to_commit().unwrap()),
         Err(_) => None,
     };
 
-    let signature = get_signature()?;
+    let signature = get_signature();
 
     if let Some(parent) = parent_commit {
         repo.commit(
@@ -46,7 +44,8 @@ fn commit_changes(commit_message: &str) -> Result<()> {
             commit_message,
             &tree,
             &[&parent],
-        )?
+        )
+        .unwrap()
     } else {
         repo.commit(
             Some("HEAD"),
@@ -55,8 +54,7 @@ fn commit_changes(commit_message: &str) -> Result<()> {
             commit_message,
             &tree,
             &[],
-        )?
+        )
+        .unwrap()
     };
-
-    Ok(())
 }

@@ -5,17 +5,16 @@ use crate::git::add::git_add;
 
 use super::*;
 
-pub fn remove() -> Result<()> {
-    let files_to_remove = get_files_to_remove()?;
-    remove_selected_files(&files_to_remove)?;
+pub fn remove() {
+    let files_to_remove = get_files_to_remove();
+    remove_selected_files(&files_to_remove);
     git_add();
-    Ok(())
 }
 
-fn get_files_to_remove() ->Result<Vec<String>> {
+fn get_files_to_remove() -> Vec<String> {
     let mut found_files = Vec::new();
 
-    let table_struct = get_table_struct()?;
+    let table_struct = get_table_struct();
     table_struct.table.values().for_each(|backedup_file| {
         found_files.push(backedup_file.into());
     });
@@ -23,23 +22,20 @@ fn get_files_to_remove() ->Result<Vec<String>> {
     select_files(found_files)
 }
 
-fn remove_selected_files(files_to_remove: &[String]) -> Result<()> {
+fn remove_selected_files(files_to_remove: &[String]) {
     files_to_remove.iter().for_each(|file| {
         remove_files(file);
-        remove_dir(file)?;
-    });
-
-    Ok(())
+        remove_dir(file);
+    })
 }
 
-fn remove_dir(file: &str) -> Result<()> {
+fn remove_dir(file: &str) {
     if let Some(dir) = Path::new(file).parent() {
         if is_dir_empty(dir) {
-            fs::remove_dir(dir)?;
+            fs::remove_dir(dir).expect("Failed to remove empty directory");
             remove_dir(&dir.display().to_string());
         }
     }
-    Ok(())
 }
 
 fn is_dir_empty(dir: &Path) -> bool {
