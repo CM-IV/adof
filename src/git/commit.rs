@@ -4,14 +4,16 @@ use crate::git::commit_message::get_commit_message;
 
 use super::*;
 
-pub fn commit() {
+pub fn commit() -> Result<()> {
     let commit_message = get_commit_message();
     commit_changes(&commit_message);
+    Ok(())
 }
 
-fn get_signature() -> Signature<'static> {
+fn get_signature() -> Result<Signature<'static>> {
     let repo = get_repo();
-    let config = repo.config().unwrap();
+    let config = repo.config()?;
+
     let name = config
         .get_string("user.name")
         .unwrap_or("Unknown".to_string());
@@ -19,18 +21,18 @@ fn get_signature() -> Signature<'static> {
         .get_string("user.email")
         .unwrap_or("unknown@example.com".to_string());
 
-    Signature::now(&name, &email).unwrap()
+    Ok(Signature::now(&name, &email)?)
 }
 
-fn commit_changes(commit_message: &str) {
+fn commit_changes(commit_message: &str) -> Result<()> {
     let repo = get_repo();
-    let mut index = repo.index().unwrap();
+    let mut index = repo.index()?;
 
-    let tree_id = index.write_tree().unwrap();
-    let tree = repo.find_tree(tree_id).unwrap();
+    let tree_id = index.write_tree()?;
+    let tree = repo.find_tree(tree_id)?;
 
     let parent_commit = match repo.head() {
-        Ok(head_ref) => Some(head_ref.peel_to_commit().unwrap()),
+        Ok(head_ref) => Some(head_ref.peel_to_commit()?),
         Err(_) => None,
     };
 
@@ -44,8 +46,7 @@ fn commit_changes(commit_message: &str) {
             commit_message,
             &tree,
             &[&parent],
-        )
-        .unwrap()
+        )?
     } else {
         repo.commit(
             Some("HEAD"),
@@ -54,7 +55,8 @@ fn commit_changes(commit_message: &str) {
             commit_message,
             &tree,
             &[],
-        )
-        .unwrap()
+        )?
     };
+
+    Ok(())
 }
