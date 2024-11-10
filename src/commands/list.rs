@@ -3,8 +3,10 @@ use std::path::Path;
 
 use adof::get_adof_dir;
 
+use super::*;
+
 pub fn list() -> Result<()> {
-    let adof_dir = get_adof_dir();
+    let adof_dir = get_adof_dir()?;
     let path = Path::new(&adof_dir);
     println!("Root 📦 {}", path.display());
     print_directory(path, "")?;

@@ -20,7 +20,7 @@ pub fn deploy(repo_link: &str, commit_id: &str) -> Result<()> {
 
 fn deploy_from_local(commit_id: &str) -> Result<()> {
     if !commit_id.is_empty() {
-        let repo = get_repo();
+        let repo = get_repo()?;
 
         let original_head = repo.head()?;
         let original_commit = original_head.peel_to_commit()?;
@@ -46,7 +46,7 @@ fn deploy_from_local(commit_id: &str) -> Result<()> {
 }
 
 fn deploy_with_commit_id(commit_id: &str) -> Result<()> {
-    let repo = get_repo();
+    let repo = get_repo()?;
 
     let oid = Oid::from_str(commit_id)?;
     let commit = repo.find_commit(oid)?;
@@ -58,10 +58,11 @@ fn deploy_with_commit_id(commit_id: &str) -> Result<()> {
     repo.checkout_tree(tree_obj, Some(&mut checkout_builder))?;
 
     repo.set_head_detached(oid)?;
+    Ok(())
 }
 
 fn deploy_from_remote(repo_link: &str, commit_id: &str) -> Result<()> {
-    if check_for_init() {
+    if check_for_init()? {
         empty_adof_dir()?;
     }
 
@@ -82,12 +83,13 @@ fn deploy_from_remote(repo_link: &str, commit_id: &str) -> Result<()> {
 }
 
 fn empty_adof_dir() -> Result<()> {
-    let adof_dir = get_adof_dir();
+    let adof_dir = get_adof_dir()?;
     fs::remove_dir_all(&adof_dir)?;
+    Ok(())
 }
 
 fn create_and_copy_files() -> Result<()> {
-    let table_struct = get_table_struct();
+    let table_struct = get_table_struct()?;
 
     table_struct
         .table

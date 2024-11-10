@@ -4,6 +4,8 @@ use adof::{get_adof_dir, get_home_dir};
 
 use crate::database::add;
 
+use super::*;
+
 pub async fn create_readme() -> Result<()> {
     let local_readme = create_local_readme().await?;
     create_backup_readme(&local_readme)?;
@@ -11,7 +13,7 @@ pub async fn create_readme() -> Result<()> {
 }
 
 async fn create_local_readme() -> Result<String> {
-    let home_dir = get_home_dir();
+    let home_dir = get_home_dir()?;
     let local_readme_dir = format!("{}/dotfiles_readme", home_dir);
 
     fs::create_dir_all(&local_readme_dir)?;

@@ -88,17 +88,19 @@ fn calculate_file_hash(file_path: &str) -> Result<Vec<u8>> {
     Ok(hasher.finalize().to_vec())
 }
 
-fn is_file_backedup(original_file: &str) -> bool {
-    let table_struct = get_table_struct();
-    table_struct.table.contains_key(original_file)
+fn is_file_backedup(original_file: &str) -> Result<bool> {
+    let table_struct = get_table_struct()?;
+    let check = table_struct.table.contains_key(original_file);
+    Ok(check)
 }
 
 fn check_for_init() -> Result<bool> {
-    let database_path = get_database_path();
+    let database_path = get_database_path()?;
     Ok(fs::exists(&database_path)?)
 }
 
-fn get_pid_file() -> String {
+fn get_pid_file() -> Result<String> {
     let adof_dir = get_adof_dir()?;
-    format!("{}/do_not_touch/pid.txt", adof_dir)
+    let pid_file = format!("{}/do_not_touch/pid.txt", adof_dir);
+    Ok(pid_file)
 }

@@ -11,7 +11,7 @@ pub mod git_ignore;
 pub mod remote;
 
 pub fn init_git() -> Result<()> {
-    let adof_dir = get_adof_dir();
+    let adof_dir = get_adof_dir()?;
     Repository::init(adof_dir)?;
     add::git_add()?;
     Ok(())
@@ -23,12 +23,12 @@ pub fn get_repo() -> Result<Repository> {
     Ok(repo)
 }
 
-pub fn is_remote_exist() -> bool {
-    get_repo().find_remote("origin").is_ok()
+pub fn is_remote_exist() -> Result<bool> {
+    Ok(get_repo()?.find_remote("origin").is_ok())
 }
 
 pub fn get_default_branch() -> Result<String> {
-    let repo = get_repo();
+    let repo = get_repo()?;
     let config = repo.config()?;
     let mut default_branch = "master".to_string();
 

@@ -4,6 +4,8 @@ use std::process::Command;
 
 use adof::{get_adof_dir, get_home_dir};
 
+use super::*;
+
 pub fn uninstall() -> Result<()> {
     let adof_dir = get_adof_dir()?;
     let pid_file = format!("{}/do_not_touch/pid.txt", adof_dir);
@@ -13,11 +15,11 @@ pub fn uninstall() -> Result<()> {
         Command::new("kill").arg(pid.trim()).output()?;
     }
 
-    let home_dir = get_home_dir();
+    let home_dir = get_home_dir()?;
     let dotfile_readme_dir = format!("{}/dotfiles_readme", home_dir);
     remove_dir(&dotfile_readme_dir);
 
-    let adof_dir = get_adof_dir();
+    let adof_dir = get_adof_dir()?;
     remove_dir(&adof_dir);
 
     let output = Command::new("which").arg("adof").output()?;

@@ -18,7 +18,7 @@ fn get_current_date_and_time() -> String {
 }
 
 fn get_change_logs() -> Result<String> {
-    let repo = get_repo();
+    let repo = get_repo()?;
 
     let tree = match repo.head() {
         Ok(head_ref) => {

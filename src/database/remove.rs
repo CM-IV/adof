@@ -13,8 +13,8 @@ pub fn remove_files(backup_file: &str) -> Result<()> {
     fs::remove_file(backup_file)?;
     let original_file = backup_file.replace(&adof_dir, &home_dir);
 
-    let database_path = get_database_path();
-    let mut table_struct = get_table_struct();
+    let database_path = get_database_path()?;
+    let mut table_struct = get_table_struct()?;
 
     table_struct.table.remove(&original_file)?;
 

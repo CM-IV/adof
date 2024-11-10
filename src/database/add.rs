@@ -5,7 +5,7 @@ use super::*;
 pub fn add_files(original_path: &str, copied_path: &str) -> Result<()> {
     let database_path = get_database_path()?;
 
-    let mut table_struct: DataTable = get_table_struct();
+    let mut table_struct: DataTable = get_table_struct()?;
 
     table_struct
         .table

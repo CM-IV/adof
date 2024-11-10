@@ -2,10 +2,10 @@ use git2::{BranchType, FetchOptions, RemoteCallbacks};
 
 use crate::push::push;
 
-use super::get_repo;
+use super::*;
 
 pub fn link_remote(repo_link: &str) -> Result<()> {
-    let repo = get_repo();
+    let repo = get_repo()?;
 
     repo.remote("origin", repo_link)?;
 
@@ -64,7 +64,7 @@ pub fn link_remote(repo_link: &str) -> Result<()> {
 }
 
 pub fn unlink_remote() -> Result<()> {
-    let repo = get_repo();
+    let repo = get_repo()?;
     repo.remote_delete("origin")?;
     Ok(())
 }

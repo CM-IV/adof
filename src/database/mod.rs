@@ -24,7 +24,7 @@ impl DataTable {
 }
 
 pub fn create_database() -> Result<()> {
-    let database_path = get_database_path();
+    let database_path = get_database_path()?;
     let database_dir = Path::new(&database_path).parent()?;
     fs::create_dir_all(database_dir)?;
 

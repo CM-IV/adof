@@ -5,13 +5,13 @@ use crate::git::commit_message::get_commit_message;
 use super::*;
 
 pub fn commit() -> Result<()> {
-    let commit_message = get_commit_message();
+    let commit_message = get_commit_message()?;
     commit_changes(&commit_message);
     Ok(())
 }
 
 fn get_signature() -> Result<Signature<'static>> {
-    let repo = get_repo();
+    let repo = get_repo()?;
     let config = repo.config()?;
 
     let name = config
@@ -25,7 +25,7 @@ fn get_signature() -> Result<Signature<'static>> {
 }
 
 fn commit_changes(commit_message: &str) -> Result<()> {
-    let repo = get_repo();
+    let repo = get_repo()?;
     let mut index = repo.index()?;
 
     let tree_id = index.write_tree()?;
@@ -36,7 +36,7 @@ fn commit_changes(commit_message: &str) -> Result<()> {
         Err(_) => None,
     };
 
-    let signature = get_signature();
+    let signature = get_signature()?;
 
     if let Some(parent) = parent_commit {
         repo.commit(

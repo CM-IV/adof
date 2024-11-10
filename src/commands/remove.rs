@@ -6,16 +6,16 @@ use crate::git::add::git_add;
 use super::*;
 
 pub fn remove() -> Result<()> {
-    let files_to_remove = get_files_to_remove();
+    let files_to_remove = get_files_to_remove()?;
     remove_selected_files(&files_to_remove)?;
     git_add();
     Ok(())
 }
 
-fn get_files_to_remove() -> Vec<String> {
+fn get_files_to_remove() ->Result<Vec<String>> {
     let mut found_files = Vec::new();
 
-    let table_struct = get_table_struct();
+    let table_struct = get_table_struct()?;
     table_struct.table.values().for_each(|backedup_file| {
         found_files.push(backedup_file.into());
     });

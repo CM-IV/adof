@@ -129,7 +129,7 @@ async fn main() -> Result<()> {
         }
 
         Commands::Link { link } => {
-            link::link(link)?;
+            link::link(link);
         }
 
         Commands::Push => {
@@ -149,7 +149,7 @@ async fn main() -> Result<()> {
         }
 
         Commands::Summary => {
-            summary::summary()?;
+            summary::summary();
         }
 
         Commands::Deploy { link, commit } => {

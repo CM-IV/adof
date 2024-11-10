@@ -5,6 +5,8 @@ use adof::get_adof_dir;
 
 use crate::git::{get_default_branch, is_remote_exist};
 
+use super::*;
+
 pub fn log(num: u8, remote: bool) -> Result<()> {
     if remote && is_remote_exist() {
         show_remote_commits(num)?;
@@ -25,7 +27,7 @@ fn show_local_commits(num: u8) -> Result<()> {
     let adof_dir = get_adof_dir()?;
     env::set_current_dir(adof_dir)?;
 
-    let default_branch = get_default_branch();
+    let default_branch = get_default_branch()?;
 
     let output = Command::new("git")
         .arg("log")
@@ -66,10 +68,10 @@ fn show_remote_commits(mut num: u8) -> Result<()> {
 }
 
 fn show_only_local_commits() -> Result<()> {
-    let adof_dir = get_adof_dir();
+    let adof_dir = get_adof_dir()?;
     env::set_current_dir(adof_dir)?;
 
-    let default_branch = get_default_branch();
+    let default_branch = get_default_branch()?;
     let diff_branch = format!("origin/main..{}", default_branch);
 
     let output = Command::new("git")
@@ -85,10 +87,10 @@ fn show_only_local_commits() -> Result<()> {
 }
 
 fn get_only_local_commits_no() -> Result<u8> {
-    let adof_dir = get_adof_dir();
+    let adof_dir = get_adof_dir()?;
     env::set_current_dir(adof_dir)?;
 
-    let default_branch = get_default_branch();
+    let default_branch = get_default_branch()?;
     let diff_branch = format!("origin/main..{}", default_branch);
 
     let output = Command::new("git")

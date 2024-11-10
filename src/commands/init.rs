@@ -16,7 +16,7 @@ use crate::{
 use super::*;
 
 pub async fn init() -> Result<()> {
-    if check_for_init() {
+    if check_for_init()? {
         println!("Already initialized");
         process::exit(1);
     }
@@ -28,9 +28,9 @@ pub async fn init() -> Result<()> {
     let found_files_task = tokio::spawn(async { find_files() });
 
     readme_task.await?;
-    let found_files = found_files_task.await?;
+    let found_files = found_files_task.await??;
 
-    let selected_files = select_files(found_files);
+    let selected_files = select_files(found_files)?;
 
     create_backup_files(&selected_files);
     init_git();

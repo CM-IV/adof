@@ -12,7 +12,7 @@ use crate::git::add::git_add;
 
 #[allow(unreachable_code)]
 pub async fn auto_update(min: u64) -> Result<()> {
-    if Path::new(&get_pid_file()?).exists() {
+    if Path::new(&get_pid_file()).exists() {
         return Ok(());
     }
 
@@ -29,7 +29,7 @@ pub async fn auto_update(min: u64) -> Result<()> {
 fn update() -> Result<()> {
     let mut files_to_update: Vec<(String, String)> = Vec::new();
 
-    let table_struct = get_table_struct();
+    let table_struct = get_table_struct()?;
     table_struct.table.iter().for_each(|data| {
         if is_to_modify(data.0, data.1)? {
             files_to_update.push((data.0.to_string(), data.1.to_string()));
@@ -45,6 +45,8 @@ fn update() -> Result<()> {
 
         git_add();
     }
+
+    Ok(())
 }
 
 fn is_to_modify(original_file: &str, backedup_file: &str) -> Result<bool> {

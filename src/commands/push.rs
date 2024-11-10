@@ -3,6 +3,8 @@ use std::process::Command;
 
 use adof::get_adof_dir;
 
+use super::*;
+
 pub fn push() -> Result<()> {
     let adof_dir = get_adof_dir()?;
     env::set_current_dir(adof_dir)?;
