@@ -31,7 +31,7 @@ pub mod update;
 fn select_files(found_files: Vec<PathBuf>) -> Result<Vec<String>> {
     let found_files = found_files
         .iter()
-        .map(|file| file.clone().into_os_string().into_string().unwrap())
+        .map(|file| file.clone().into_os_string().into_string()?)
         .collect::<Vec<String>>()
         .join("\n");
 
@@ -65,7 +65,7 @@ fn select_files(found_files: Vec<PathBuf>) -> Result<Vec<String>> {
 
 pub fn create_file(original_file: &str) -> Result<String> {
     let home_dir = get_home_dir()?;
-    let adof_dir = get_adof_dir();
+    let adof_dir = get_adof_dir()?;
 
     let backup_file = original_file.replace(&home_dir, &adof_dir);
 
@@ -99,6 +99,6 @@ fn check_for_init() -> Result<bool> {
 }
 
 fn get_pid_file() -> String {
-    let adof_dir = get_adof_dir();
+    let adof_dir = get_adof_dir()?;
     format!("{}/do_not_touch/pid.txt", adof_dir)
 }
