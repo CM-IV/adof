@@ -8,9 +8,6 @@ pub enum AdofError {
         found: u64
     },
 
-    #[error("You are requesting too many logs. Expected: {expected:?}, Found: {found}")]
-    TooManyLogs {
-        expected: String,
-        found: u8
-    }
+    #[error("You are requesting too many logs. Expected: Less than 100, Found: {0}")]
+    TooManyLogs(u8)
 }

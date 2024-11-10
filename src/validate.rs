@@ -14,10 +14,7 @@ pub fn auto_update_time(min: u64) -> Result<(), Report<AdofError>> {
 }
 
 pub fn log_counts(num: u8) -> Result<(), Report<AdofError>> {
-    ensure!(num <= 100, AdofError::TooManyLogs {
-        expected: "Less than 100".to_string(),
-        found: num
-    });
+    ensure!(num <= 100, AdofError::TooManyLogs(num));
 
     Ok(())
 }
