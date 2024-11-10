@@ -4,15 +4,14 @@ use crate::git::commit::commit;
 
 use super::*;
 
-pub fn git_add() {
+pub fn git_add() -> Result<()> {
     let repo = get_repo();
-    let mut index = repo.index().unwrap();
+    let mut index = repo.index()?;
 
-    index
-        .add_all(["*"].iter(), IndexAddOption::DEFAULT, None)
-        .unwrap();
+    index.add_all(["*"].iter(), IndexAddOption::DEFAULT, None)?;
 
-    index.write().unwrap();
+    index.write()?;
 
     commit();
+    Ok(())
 }
