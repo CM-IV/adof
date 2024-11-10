@@ -5,10 +5,11 @@ use crate::git::add::git_add;
 
 use super::*;
 
-pub fn remove() {
+pub fn remove() -> Result<()> {
     let files_to_remove = get_files_to_remove();
-    remove_selected_files(&files_to_remove);
+    remove_selected_files(&files_to_remove)?;
     git_add();
+    Ok(())
 }
 
 fn get_files_to_remove() -> Vec<String> {
@@ -22,20 +23,23 @@ fn get_files_to_remove() -> Vec<String> {
     select_files(found_files)
 }
 
-fn remove_selected_files(files_to_remove: &[String]) {
+fn remove_selected_files(files_to_remove: &[String]) -> Result<()> {
     files_to_remove.iter().for_each(|file| {
         remove_files(file);
-        remove_dir(file);
-    })
+        remove_dir(file)?;
+    });
+
+    Ok(())
 }
 
-fn remove_dir(file: &str) {
+fn remove_dir(file: &str) -> Result<()> {
     if let Some(dir) = Path::new(file).parent() {
         if is_dir_empty(dir) {
-            fs::remove_dir(dir).expect("Failed to remove empty directory");
+            fs::remove_dir(dir)?;
             remove_dir(&dir.display().to_string());
         }
     }
+    Ok(())
 }
 
 fn is_dir_empty(dir: &Path) -> bool {
