@@ -13,7 +13,7 @@ use crate::git::add::git_add;
 #[allow(unreachable_code)]
 pub async fn auto_update(min: u64) -> Result<()> {
     if Path::new(&get_pid_file()?).exists() {
-        return Ok(())
+        return Ok(());
     }
 
     store_pid()?;
