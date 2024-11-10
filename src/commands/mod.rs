@@ -5,8 +5,8 @@ use std::{
     path::{self, PathBuf},
 };
 
-use sha2::{Digest, Sha256};
 use anyhow::Result;
+use sha2::{Digest, Sha256};
 
 use adof::{get_adof_dir, get_home_dir};
 
@@ -44,8 +44,7 @@ fn select_files(found_files: Vec<PathBuf>) -> Result<Vec<String>> {
         .spawn()?;
 
     if let Some(mut stdin) = child.stdin.take() {
-        stdin
-            .write_all(found_files.as_bytes())?;
+        stdin.write_all(found_files.as_bytes())?;
     }
 
     let output = child.wait_with_output()?;

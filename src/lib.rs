@@ -7,7 +7,8 @@ pub fn get_home_dir() -> Result<String> {
     Ok(home_dir)
 }
 
-pub fn get_adof_dir() -> String {
-    let home_dir = get_home_dir();
-    format!("{}/{}", home_dir, ".adof")
+pub fn get_adof_dir() -> Result<String> {
+    let home_dir = get_home_dir()?;
+    let adof_dir = format!("{}/{}", home_dir, ".adof");
+    Ok(adof_dir)
 }
