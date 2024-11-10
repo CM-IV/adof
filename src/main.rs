@@ -1,30 +1,9 @@
-// deploy - copy all the dot files from GitHub and store in the local machine at perfect places
-//      - process
-//          - when user runs the deploy command first fetch the files and shows a summary of all
-//          files like
-//              - list all the files
-//              - with line count means how many lines each file contains
-//              - then the file language like rust, lua, vimrc etc
-//              - the file location where it going to save (also give the option to user to change
-//              the file location if they want to)
-//          - after this if user says yes then proceed and save files where the location it
-//          indicated
-//          - when a user deploy from other GitHub repo do not link it only deploy, only link when
-//          user runs the deploy command
-//          - then do a small animation to celebrate🎉
-
 use clap::{Parser, Subcommand};
+use serde::{Deserialize, Serialize};
 
-pub mod commands;
-pub mod database;
-pub mod git;
+pub mod validate;
 
-use commands::{
-    add, auto_update, deploy, init, link, list, log, push, remove, summary, uninstall, unlink,
-    update,
-};
-
-#[derive(Parser)]
+#[derive(Parser, Debug)]
 #[command(name = "adof")]
 #[command(version = "v0.10.0")]
 #[command(author = "Abinash S. <fnabinash@gmail.com>")]
@@ -34,137 +13,110 @@ struct Cli {
     command: Commands,
 }
 
-#[derive(Subcommand)]
+#[derive(Subcommand, Debug)]
 enum Commands {
     /// Initialize Adof in your system
     Init,
 
-    /// Manually add any files you want to keep track of
+    /// Manually add files to be tracked by ADOF
     Add,
 
-    /// Remove files you does not want to keep track of
+    /// Remove files from the tracking list
     Remove,
 
-    /// List all the files you are keeping track of
+    /// List all the files being tracked by ADOF
     List,
 
-    /// Link to a GitHub repo to store your dot files
+    /// Link a GitHub repository to store your files
     Link {
-        /// Link of the GitHub repo
+        /// Link of the GitHub repository
         link: String,
     },
 
-    /// Push the local changes to GitHub
+    /// Push local changes to the GitHub
     Push,
 
-    /// Update the changes manually
+    /// Manually check and update files
     Update {
-        /// Check for updates
+        /// Flag to check for available updates
         #[arg(short, long, default_value = "false")]
         check: bool,
     },
 
-    /// Automatically update the changes
+    /// Automatically update files at a set interval
     AutoUpdate {
-        /// Set how fast you want to auto update
+        /// The frequency of automatic updates in minutes
         #[arg(default_value = "60")]
         min: u64,
     },
 
-    /// Got logs of latest changes
+    /// Display logs of the latest changes
     Log {
-        /// Get the lastest local changes up to a number
+        /// Show the latest changes up to the specified number
         #[arg(default_value = "0")]
         num: u8,
 
-        /// Get commits from remote repo
+        /// Flag to fetch commits from GitHub
         #[arg(short, long, default_value = "false")]
         remote: bool,
     },
 
-    /// Get the overview of your adof
+    /// Get an overview of the current status of ADOF
     Summary,
 
-    /// Deploy the dot files to your system
+    /// Deploy files from a GitHub or local repository
     Deploy {
-        /// Enter the link of the github repo
+        /// The GitHub repository URL to deploy from
         #[arg(default_value = "")]
         link: String,
 
-        /// Deploy the dot files from a specific commit hash
+        /// Optionally, specify a commit hash
         #[arg(short, long, default_value = "")]
         commit: String,
     },
 
-    /// Unlink with the GitHub repo
+    /// Unlink the current GitHub repository from ADOF
     Unlink,
 
-    /// Uninstall Adof
+    /// Uninstall ADOF from your system
     Uninstall,
 
-    /// Sponsor Me
+    /// Support the development of ADOF
     Sponsor,
 }
 
-#[tokio::main]
-async fn main() {
+#[derive(Debug, Serialize, Deserialize)]
+struct Command {
+    name: String,
+    args: Vec<String>,
+}
+
+fn main() {
     let cli = Cli::parse();
 
-    match &cli.command {
-        Commands::Init => {
-            init::init().await;
-        }
+    let (command_name, args) = match &cli.command {
+        Commands::Init => ("Init", vec![]),
+        Commands::Add => ("Add", vec![]),
+        Commands::Remove => ("Remove", vec![]),
+        Commands::List => ("List", vec![]),
+        Commands::Link { link } => ("Link", vec![link.clone()]),
+        Commands::Push => ("Push", vec![]),
+        Commands::Update { check } => ("Update", vec![check.to_string()]),
+        Commands::AutoUpdate { min } => ("AutoUpdate", vec![min.to_string()]),
+        Commands::Log { num, remote } => ("Log", vec![num.to_string(), remote.to_string()]),
+        Commands::Summary => ("Summary", vec![]),
+        Commands::Deploy { link, commit } => ("Deploy", vec![link.clone(), commit.clone()]),
+        Commands::Unlink => ("Unlink", vec![]),
+        Commands::Uninstall => ("Uninstall", vec![]),
+        Commands::Sponsor => ("Sponsor", vec![]),
+    };
 
-        Commands::Add => {
-            add::add().await;
-        }
+    let command = Command {
+        name: command_name.to_string(),
+        args,
+    };
 
-        Commands::Remove => {
-            remove::remove();
-        }
+    let json_data = serde_json::to_string(&command).expect("Failed to serialize");
 
-        Commands::List => {
-            list::list();
-        }
-
-        Commands::Link { link } => {
-            link::link(link);
-        }
-
-        Commands::Push => {
-            push::push();
-        }
-
-        Commands::Update { check } => {
-            update::update(*check);
-        }
-
-        Commands::AutoUpdate { min } => {
-            auto_update::auto_update(*min).await;
-        }
-
-        Commands::Log { num, remote } => {
-            log::log(*num, *remote);
-        }
-
-        Commands::Summary => {
-            summary::summary();
-        }
-
-        Commands::Deploy { link, commit } => {
-            deploy::deploy(link, commit);
-        }
-
-        Commands::Unlink => {
-            unlink::unlink();
-        }
-
-        Commands::Uninstall => {
-            uninstall::uninstall();
-        }
-
-        Commands::Sponsor => {
-            webbrowser::open("https://github.com/sponsors/fnabinash").unwrap();
-        }
-    }
+    commands::process_command(&json_data);
 }
