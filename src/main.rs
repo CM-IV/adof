@@ -96,18 +96,37 @@ fn main() {
 
     let (command_name, args) = match &cli.command {
         Commands::Init => ("Init", vec![]),
+
         Commands::Add => ("Add", vec![]),
+
         Commands::Remove => ("Remove", vec![]),
+
         Commands::List => ("List", vec![]),
-        Commands::Link { link } => ("Link", vec![link.clone()]),
+
+        Commands::Link { link } => {
+            validate::validate_github_repo(&link);
+            ("Link", vec![link.clone()])
+        },
+
         Commands::Push => ("Push", vec![]),
+
         Commands::Update { check } => ("Update", vec![check.to_string()]),
+
         Commands::AutoUpdate { min } => ("AutoUpdate", vec![min.to_string()]),
+
         Commands::Log { num, remote } => ("Log", vec![num.to_string(), remote.to_string()]),
+
         Commands::Summary => ("Summary", vec![]),
-        Commands::Deploy { link, commit } => ("Deploy", vec![link.clone(), commit.clone()]),
+
+        Commands::Deploy { link, commit } => {
+            validate::validate_github_repo(&link);
+            ("Deploy", vec![link.clone(), commit.clone()])
+        },
+
         Commands::Unlink => ("Unlink", vec![]),
+
         Commands::Uninstall => ("Uninstall", vec![]),
+
         Commands::Sponsor => ("Sponsor", vec![]),
     };
 
