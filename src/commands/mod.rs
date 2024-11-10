@@ -6,6 +6,7 @@ use std::{
 };
 
 use sha2::{Digest, Sha256};
+use anyhow::Result;
 
 use adof::{get_adof_dir, get_home_dir};
 
@@ -27,7 +28,7 @@ pub mod uninstall;
 pub mod unlink;
 pub mod update;
 
-fn select_files(found_files: Vec<PathBuf>) -> Vec<String> {
+fn select_files(found_files: Vec<PathBuf>) -> Result<Vec<String>> {
     let found_files = found_files
         .iter()
         .map(|file| file.clone().into_os_string().into_string().unwrap())
@@ -40,16 +41,14 @@ fn select_files(found_files: Vec<PathBuf>) -> Vec<String> {
         .arg("-m")
         .stdin(Stdio::piped())
         .stdout(Stdio::piped())
-        .spawn()
-        .expect("Failed to start fzf");
+        .spawn()?;
 
     if let Some(mut stdin) = child.stdin.take() {
         stdin
-            .write_all(found_files.as_bytes())
-            .expect("Failed to write to fzf stdin");
+            .write_all(found_files.as_bytes())?;
     }
 
-    let output = child.wait_with_output().expect("Failed to read fzf output");
+    let output = child.wait_with_output()?;
 
     let selected_files = String::from_utf8_lossy(&output.stdout)
         .trim()
@@ -62,31 +61,32 @@ fn select_files(found_files: Vec<PathBuf>) -> Vec<String> {
         println!("No file selected.");
     }
 
-    selected_files
+    Ok(selected_files)
 }
 
-pub fn create_file(original_file: &str) -> String {
-    let home_dir = get_home_dir();
+pub fn create_file(original_file: &str) -> Result<String> {
+    let home_dir = get_home_dir()?;
     let adof_dir = get_adof_dir();
 
     let backup_file = original_file.replace(&home_dir, &adof_dir);
 
     let path = path::Path::new(&backup_file);
-    let path_dir = path.parent().unwrap();
+    let path_dir = path.parent()?;
 
-    fs::create_dir_all(path_dir).unwrap();
-    fs::File::create(&backup_file).unwrap();
+    fs::create_dir_all(path_dir)?;
+    fs::File::create(&backup_file)?;
 
-    backup_file
+    Ok(backup_file)
 }
 
-fn calculate_file_hash(file_path: &str) -> Vec<u8> {
-    let mut file = fs::File::open(file_path).unwrap();
+fn calculate_file_hash(file_path: &str) -> Result<Vec<u8>> {
+    let mut file = fs::File::open(file_path)?;
     let mut hasher = Sha256::new();
     let mut buffer = Vec::new();
-    file.read_to_end(&mut buffer).unwrap();
+    file.read_to_end(&mut buffer)?;
     hasher.update(&buffer);
-    hasher.finalize().to_vec()
+
+    Ok(hasher.finalize().to_vec())
 }
 
 fn is_file_backedup(original_file: &str) -> bool {
@@ -94,9 +94,9 @@ fn is_file_backedup(original_file: &str) -> bool {
     table_struct.table.contains_key(original_file)
 }
 
-fn check_for_init() -> bool {
+fn check_for_init() -> Result<bool> {
     let database_path = get_database_path();
-    fs::exists(&database_path).unwrap()
+    Ok(fs::exists(&database_path)?)
 }
 
 fn get_pid_file() -> String {
