@@ -1,9 +1,9 @@
+use anyhow::Result;
 use clap::{Parser, Subcommand};
 use serde::{Deserialize, Serialize};
-use error_stack::Result;
 
-pub mod validate;
 pub mod error;
+pub mod validate;
 
 #[derive(Parser, Debug)]
 #[command(name = "adof")]
@@ -93,7 +93,7 @@ struct Command {
     args: Vec<String>,
 }
 
-fn main() -> Result<(), error::AdofError> {
+fn main() -> Result<()> {
     let cli = Cli::parse();
 
     let (command_name, args) = match &cli.command {
@@ -143,7 +143,7 @@ fn main() -> Result<(), error::AdofError> {
         args,
     };
 
-    let json_data = serde_json::to_string(&command).expect("Failed to serialize");
+    let json_data = serde_json::to_string(&command).map_err(|_| error::AdofError::UnknownIssue)?;
 
     commands::process_command(&json_data);
 
