@@ -19,10 +19,13 @@ members = [
 ]
 
 [dependencies]
+commands = { path = "./commands" }
+
 clap = { version = "4.5.20", features = ["derive"] }
 serde = { version = "1.0.214", features = ["derive"] }
 serde_json = "1.0.132"
 
-commands = { path = "./commands" }
 error-stack = "0.5.0"
 thiserror = "2.0.2"
+reqwest = { version = "0.12.9", features = ["blocking"] }
+url = "2.5.3"

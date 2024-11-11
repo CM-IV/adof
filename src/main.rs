@@ -106,7 +106,7 @@ fn main() -> Result<(), error::AdofError> {
         Commands::List => ("List", vec![]),
 
         Commands::Link { link } => {
-            validate::github_repo(&link);
+            validate::github_repo(&link)?;
             ("Link", vec![link.clone()])
         }
 
@@ -127,7 +127,7 @@ fn main() -> Result<(), error::AdofError> {
         Commands::Summary => ("Summary", vec![]),
 
         Commands::Deploy { link, commit } => {
-            validate::github_repo(&link);
+            validate::github_repo(&link)?;
             ("Deploy", vec![link.clone(), commit.clone()])
         }
 
