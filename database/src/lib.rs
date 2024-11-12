@@ -1,11 +1,10 @@
 use std::collections::HashMap;
 
-use anyhow::Result;
+use anyhow::{Context, Result};
 use serde::{Deserialize, Serialize};
 
 pub mod add;
 pub mod create;
-pub mod error;
 pub mod get;
 pub mod remove;
 
@@ -30,7 +29,7 @@ impl DataTable {
 
 pub fn process_command(json_command: &str) -> Result<()> {
     let command: Command =
-        serde_json::from_str(json_command).expect("Something went wrong. Please try again.");
+        serde_json::from_str(json_command).context("Something went wrong. Please try again.")?;
     println!("{:?}", command.name);
     Ok(())
 }

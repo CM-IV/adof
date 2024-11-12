@@ -1,10 +1,9 @@
 use std::env;
 use std::fs;
 
-use anyhow::Result;
+use anyhow::anyhow;
 
-use crate::error::DBError;
-use crate::DataTable;
+use super::*;
 
 pub fn get_home_dir() -> String {
     env::var("HOME").expect("Failed to get the home dir.")
@@ -25,13 +24,15 @@ pub fn get_database_path() -> String {
 pub fn get_table_struct() -> Result<DataTable> {
     let database_path = get_database_path();
 
-    let database_contents = fs::read_to_string(&database_path).map_err(|e| DBError::FileError {
-        file: database_path.to_string(),
-        source: e,
+    let database_contents = fs::read_to_string(&database_path).map_err(|e| {
+        anyhow!(
+            "Failed to read the file: {:?}. Source: {e:?}",
+            database_path
+        )
     })?;
 
-    let table_struct: DataTable =
-        serde_json::from_str(&database_contents).map_err(|_| DBError::UnknownIssue)?;
+    let table_struct: DataTable = serde_json::from_str(&database_contents)
+        .context("Something went wrong. Please try again.")?;
 
     Ok(table_struct)
 }
