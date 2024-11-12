@@ -1,36 +1,44 @@
-use anyhow::{ensure, Result};
+use anyhow::{anyhow, ensure, Context, Result};
 use reqwest::blocking::Client;
 use url::Url;
 
-use crate::error::AdofError;
-
 pub fn github_repo(repo_link: &str) -> Result<()> {
-    let url = Url::parse(repo_link).map_err(|_| AdofError::InvalidLink(repo_link.to_string()))?;
+    let url =
+        Url::parse(repo_link).map_err(|_| anyhow!("Invalid GitHub link. Link: {:?}", repo_link))?;
 
     if url.host_str() != Some("github.com") {
-        return Err(AdofError::InvalidLink(repo_link.to_string()).into());
+        return Err(anyhow!("Invalid GitHub link. Link: {:?}", repo_link));
     }
 
     let client = Client::new();
     let response = client
         .head(url.as_str())
         .send()
-        .map_err(|_| AdofError::UnknownIssue)?;
+        .context("Failed to validate the Link. Check your internet connection and try again.")?;
 
     ensure!(
         response.status().is_success(),
-        AdofError::InvalidLink(repo_link.to_string())
+        "Invalid GitHub link. Link: {:?}",
+        repo_link
     );
 
     Ok(())
 }
 
 pub fn auto_update_time(min: u64) -> Result<()> {
-    ensure!(min >= 11, AdofError::TooFastUpdateTime(min));
+    ensure!(
+        min >= 11,
+        "You can not set auto update interval less than 10 min. Found: {:?}",
+        min
+    );
     Ok(())
 }
 
 pub fn log_counts(num: u8) -> Result<()> {
-    ensure!(num <= 100, AdofError::TooManyLogs(num));
+    ensure!(
+        num <= 100,
+        "You are requesting too many logs, Expected: \"Less than 100\", Found: {:?}",
+        num
+    );
     Ok(())
 }

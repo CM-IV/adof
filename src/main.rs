@@ -1,8 +1,7 @@
-use anyhow::Result;
+use anyhow::{Context, Result};
 use clap::{Parser, Subcommand};
 use serde::{Deserialize, Serialize};
 
-pub mod error;
 pub mod validate;
 
 #[derive(Parser, Debug)]
@@ -143,7 +142,8 @@ fn main() -> Result<()> {
         args,
     };
 
-    let json_data = serde_json::to_string(&command).map_err(|_| error::AdofError::UnknownIssue)?;
+    let json_data =
+        serde_json::to_string(&command).context("Something went wrong. Please try agian!")?;
 
     commands::process_command(&json_data);
 
