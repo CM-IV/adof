@@ -3,9 +3,11 @@ use std::collections::HashMap;
 use anyhow::Result;
 use serde::{Deserialize, Serialize};
 
+pub mod add;
+pub mod create;
 pub mod error;
 pub mod get;
-pub mod create;
+pub mod remove;
 
 #[derive(Debug, Serialize, Deserialize)]
 struct Command {
