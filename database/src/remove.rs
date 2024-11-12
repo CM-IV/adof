@@ -1,9 +1,4 @@
-use std::fs;
-
-use anyhow::anyhow;
-
 use super::*;
-use crate::get::*;
 
 pub fn remove_files(backup_file: &str) -> Result<()> {
     let home_dir = get_home_dir();

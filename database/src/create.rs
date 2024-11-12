@@ -1,9 +1,6 @@
-use std::fs;
 use std::path::Path;
 
 use super::*;
-
-use crate::get::*;
 
 pub fn create_database() -> Result<()> {
     let database_path = get_database_path();

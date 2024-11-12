@@ -1,9 +1,4 @@
-use std::fs;
-
-use anyhow::anyhow;
-
 use super::*;
-use crate::get::*;
 
 pub fn add_files(original_path: &str, copied_path: &str) -> Result<()> {
     let database_path = get_database_path();
