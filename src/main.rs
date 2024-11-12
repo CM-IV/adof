@@ -1,8 +1,12 @@
-use anyhow::{Context, Result};
+use anyhow::Result;
 use clap::{Parser, Subcommand};
-use serde::{Deserialize, Serialize};
 
+pub mod commands;
+pub mod database;
+pub mod git;
 pub mod validate;
+
+use commands::*;
 
 #[derive(Parser, Debug)]
 #[command(name = "adof")]
@@ -86,66 +90,71 @@ enum Commands {
     Sponsor,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
-struct Command {
-    name: String,
-    args: Vec<String>,
-}
-
-fn main() -> Result<()> {
+#[tokio::main]
+async fn main() -> Result<()> {
     let cli = Cli::parse();
 
-    let (command_name, args) = match &cli.command {
-        Commands::Init => ("Init", vec![]),
-
-        Commands::Add => ("Add", vec![]),
-
-        Commands::Remove => ("Remove", vec![]),
-
-        Commands::List => ("List", vec![]),
-
-        Commands::Link { link } => {
-            validate::github_repo(&link)?;
-            ("Link", vec![link.clone()])
+    match &cli.command {
+        Commands::Init => {
+            init::init().await?;
         }
 
-        Commands::Push => ("Push", vec![]),
+        Commands::Add => {
+            add::add().await?;
+        }
 
-        Commands::Update { check } => ("Update", vec![check.to_string()]),
+        Commands::Remove => {
+            remove::remove()?;
+        }
+
+        Commands::List => {
+            list::list()?;
+        }
+
+        Commands::Link { link } => {
+            validate::github_repo(link)?;
+            link::link(link)?;
+        }
+
+        Commands::Push => {
+            push::push()?;
+        }
+
+        Commands::Update { check } => {
+            update::update(*check)?;
+        }
 
         Commands::AutoUpdate { min } => {
             validate::auto_update_time(*min)?;
-            ("AutoUpdate", vec![min.to_string()])
+            auto_update::auto_update(*min).await?;
         }
 
         Commands::Log { num, remote } => {
             validate::log_counts(*num)?;
-            ("Log", vec![num.to_string(), remote.to_string()])
+            log::log(*num, *remote)?;
         }
 
-        Commands::Summary => ("Summary", vec![]),
+        Commands::Summary => {
+            summary::summary();
+        }
 
         Commands::Deploy { link, commit } => {
-            validate::github_repo(&link)?;
-            ("Deploy", vec![link.clone(), commit.clone()])
+            validate::github_repo(link)?;
+            deploy::deploy(link, commit)?;
         }
 
-        Commands::Unlink => ("Unlink", vec![]),
+        Commands::Unlink => {
+            unlink::unlink()?;
+        }
 
-        Commands::Uninstall => ("Uninstall", vec![]),
+        Commands::Uninstall => {
+            uninstall::uninstall()?;
+        }
 
-        Commands::Sponsor => ("Sponsor", vec![]),
+        Commands::Sponsor => {
+            webbrowser::open("https://github.com/sponsors/fnabinash").unwrap();
+        }
     };
-
-    let command = Command {
-        name: command_name.to_string(),
-        args,
-    };
-
-    let json_data =
-        serde_json::to_string(&command).context("Something went wrong. Please try agian!")?;
-
-    commands::process_command(&json_data);
 
     Ok(())
 }

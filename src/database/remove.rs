@@ -1,8 +1,8 @@
 use super::*;
 
 pub fn remove_files(backup_file: &str) -> Result<()> {
-    let home_dir = get_home_dir();
-    let adof_dir = get_adof_dir();
+    let home_dir = adof::get_home_dir();
+    let adof_dir = adof::get_adof_dir();
     let original_file = backup_file.replace(&adof_dir, &home_dir);
 
     fs::remove_file(backup_file)
