@@ -84,6 +84,9 @@ cargo install --path adof/
 - `adof log -r` or `adof log --remote` - It lists the last 5 commits from your remote repo, If you have not configured your remote repo with local then it will list the last 5 commits from your local repo.
 - `adof log -r [number]` or `adof log --remote [number]` - It lists the last [number] commits from your remote repo, if not configured then it lists from the local repo.
 
+### `list`
+- It will list all the file that you are keeping track of using Adof.
+
 ---
 
 ## Future Features
