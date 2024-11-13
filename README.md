@@ -20,6 +20,10 @@
 <h1 align="center">Oxide Org.</h1>
 
 <p align="center">
+  <a href="https://github.com/OxideOrg" target="_blank">
+    <img src="https://img.shields.io/badge/github-%23000000.svg?style=for-the-badge&logo=github&logoColor=white">
+  </a>
+  
   <a href="https://x.com/oxide_org" target="_blank">
     <img src="https://img.shields.io/badge/OxideOrg-%23000000.svg?style=for-the-badge&logo=X&logoColor=white">
   </a>
