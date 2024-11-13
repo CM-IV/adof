@@ -8,5 +8,6 @@ pub fn link(repo_link: &str) -> Result<()> {
     }
 
     link_remote(repo_link).context("Failed to link remote repository")?;
+    println!("Remote linked, branch tracking configured, and commits pushed.");
     Ok(())
 }

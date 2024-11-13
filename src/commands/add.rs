@@ -32,6 +32,8 @@ pub async fn add() -> Result<()> {
     create_backup_files(&files_to_add).context("Failed to create backup files")?;
     git_add().context("Failed to add files to git")?;
 
+    println!("Files added successfully.");
+
     Ok(())
 }
 

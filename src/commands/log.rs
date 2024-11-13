@@ -11,11 +11,16 @@ pub fn log(num: u8, remote: bool) -> Result<()> {
         show_remote_commits(num)?;
     } else if num == 0 && is_remote_exist().context("Failed to check if remote exists")? {
         if get_only_local_commits_no()? == 0 {
-            println!("Everything is up to date.");
+            println!("Remote is up to date with local.\n");
             show_local_commits(5)?;
+        } else {
+            println!("These commits are not in remote branch.\n");
+            show_only_local_commits()?;
         }
-        show_only_local_commits()?;
     } else {
+        if remote {
+            println!("Remote branch is not connected.\n");
+        }
         show_local_commits(num)?;
     }
     Ok(())
