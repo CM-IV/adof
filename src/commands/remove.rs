@@ -8,6 +8,12 @@ use crate::git::add::git_add;
 
 pub fn remove() -> Result<()> {
     let files_to_remove = get_files_to_remove()?;
+
+    if files_to_remove.is_empty() {
+        eprintln!("Nothing selected.");
+        std::process::exit(0);
+    }
+
     remove_selected_files(&files_to_remove)?;
     git_add()?;
     Ok(())
