@@ -68,3 +68,31 @@ pub fn log_counts(num: u8) -> Result<()> {
     );
     Ok(())
 }
+
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_auto_update_time() {
+        assert!(auto_update_time(11).is_ok());
+        assert!(auto_update_time(10).is_err());
+        assert!(auto_update_time(1).is_err());
+    }
+
+    #[test]
+    fn test_log_counts() {
+        assert!(log_counts(1).is_ok());
+        assert!(log_counts(100).is_ok());
+        assert!(log_counts(101).is_err());
+    }
+
+    #[tokio::test]
+    async fn test_github_repo() {
+        assert!(github_repo("github").await.is_err());
+        assert!(github_repo("github.com").await.is_err());
+        assert!(github_repo("https://github.com/fnabinash/adof.gi").await.is_err());
+        assert!(github_repo("https://github.com/fnabinash/adof.git").await.is_ok());
+    }
+}
