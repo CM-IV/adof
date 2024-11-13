@@ -4,8 +4,9 @@ use anyhow::{Context, Result};
 pub fn unlink() -> Result<()> {
     if is_remote_exist().context("Checking if remote exists")? {
         unlink_remote()?;
+        println!("You have successfully removed the remote branch.");
     } else {
-        println!("First connect to remote");
+        println!("Remote branch is not configured.");
     }
     Ok(())
 }

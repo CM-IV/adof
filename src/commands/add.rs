@@ -25,7 +25,7 @@ pub async fn add() -> Result<()> {
     let files_to_add = get_files_to_add().context("Failed to retrieve files to add")?;
 
     if files_to_add.is_empty() {
-        println!("Files already exist");
+        println!("Please select new files.");
         process::exit(1);
     }
 

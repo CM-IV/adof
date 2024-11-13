@@ -14,7 +14,7 @@ pub fn deploy(repo_link: &str, commit_id: &str) -> Result<()> {
         deploy_from_remote(repo_link, commit_id)?;
     }
 
-    println!("Files deployed successfully.");
+    println!("Files are deployed successfully.");
     Ok(())
 }
 

@@ -10,12 +10,14 @@ pub fn remove() -> Result<()> {
     let files_to_remove = get_files_to_remove()?;
 
     if files_to_remove.is_empty() {
-        eprintln!("Nothing selected.");
+        println!("Nothing selected.");
         std::process::exit(0);
     }
 
     remove_selected_files(&files_to_remove)?;
     git_add()?;
+
+    println!("Files are removed successfully.");
     Ok(())
 }
 

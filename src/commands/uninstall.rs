@@ -21,6 +21,8 @@ pub fn uninstall() -> Result<()> {
         String::from_utf8(output.stdout).context("Converting binary path to UTF-8")?;
     remove_dir(adof_bin_dir.trim())?;
 
+    println!("Adof has been successfully uninstalled.");
+
     Ok(())
 }
 

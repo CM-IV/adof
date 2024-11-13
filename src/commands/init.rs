@@ -36,7 +36,7 @@ pub async fn init() -> Result<()> {
     create_backup_files(&selected_files).context("Failed to create backup files")?;
     init_git().context("Failed to initialize git")?;
 
-    println!("Adof has been initialized.");
+    println!("Adof has been initialized successffully.");
     Ok(())
 }
 

@@ -19,7 +19,7 @@ pub fn log(num: u8, remote: bool) -> Result<()> {
         }
     } else {
         if remote {
-            println!("Remote branch is not connected.\n");
+            println!("Remote branch is not configured.\n");
         }
         show_local_commits(num)?;
     }

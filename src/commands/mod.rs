@@ -65,7 +65,7 @@ fn select_files(found_files: Vec<PathBuf>) -> Result<Vec<String>> {
         .collect::<Vec<String>>();
 
     if selected_files.is_empty() {
-        println!("No file selected.");
+        println!("No files selected.");
     }
 
     Ok(selected_files)

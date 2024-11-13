@@ -3,7 +3,7 @@ use anyhow::{Context, Result};
 
 pub fn link(repo_link: &str) -> Result<()> {
     if is_remote_exist().context("Failed to check if remote exists")? {
-        println!("Remote already exists");
+        println!("Remote branch is already configured.");
         std::process::exit(1);
     }
 

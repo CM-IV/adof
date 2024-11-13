@@ -22,16 +22,8 @@ pub fn link_remote(repo_link: &str) -> Result<()> {
         .context("Failed to set branch merge configuration")?;
 
     let mut fetch_options = FetchOptions::new();
-    let mut callbacks = RemoteCallbacks::new();
+    let callbacks = RemoteCallbacks::new();
 
-    callbacks.transfer_progress(|stats| {
-        println!(
-            "Received {} objects in {} bytes",
-            stats.received_objects(),
-            stats.received_bytes()
-        );
-        true
-    });
     fetch_options.remote_callbacks(callbacks);
 
     let mut remote = repo
