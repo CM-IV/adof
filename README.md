@@ -109,7 +109,17 @@ cargo install --path adof/
 
 ---
 
-## Future Features
+## Other Key Features
+
+In addition to core commands, *Adof* offers these valuable features:
+
+- **Enhanced Commit Messages**: Automatically generated commit messages with detailed information on the day, date, time, and number of files and lines changed, including specific filenames and line numbers. This helps you easily track what has changed.
+  
+- **Automated README Generation**: For users who wish to share their dotfiles on GitHub, *adof* can automatically generate a `README.md` file containing essential information about the repository contents and usage instructions. The README can be customized to add more personal notes, but by default, it includes everything a user needs to get started.
+
+- **Error Handling**: Provides detailed error messages and logging to help identify and resolve issues quickly, enhancing stability and ease of use.
+
+## Future Plans
 
 - **Auto-update**: Set an interval for *adof* to regularly check for and sync changes automatically.
 - **Profile Management**: Maintain multiple profiles within one repository for different setups or environments(like for work, personal, streaming etc).
