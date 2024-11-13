@@ -20,6 +20,12 @@
 
 <p align="center">We build fast, reliable and easy-to-use tools for developers.</p>
 
+If you love **Adof**, you are most likely going to love my future projects (obviously going to be free and open source for everyone), but those are going to be more focused on enterprise or professional use cases. Already, planned out 7 projects that will help you in your different stages of development. So, I need your help to build those projects. Of course, your help never going to be free, you will get your exclusive benefits after the Org is launched.
+
+As everything going to be free and open-source, I am planning to sustain this org on sponsorships. So, the plan is simple after the org launch it going to have different tiers but as an individual, you will get two tiers one is **tech enthusiast** and the other is **tech influencer**. 
+
+If you have some suggestions or need more info please share them with me on Twitter (https://x.com/fnabinash) or email me at fnabiansh@gmail.com.
+
 ---
 
 ## Installation
