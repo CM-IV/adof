@@ -58,7 +58,9 @@ cargo install adof
 To build *adof* manually, clone the repository and compile it with Cargo:
 
 ```bash
-git clone https://github.com/yourusername/adof.git
+git clone https://github.com/fnabinash/adof.git
+```
+```
 cargo install --path adof/
 ```
 
