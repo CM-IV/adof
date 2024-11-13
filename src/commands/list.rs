@@ -1,6 +1,6 @@
+use anyhow::Result;
 use std::fs;
 use std::path::Path;
-use anyhow::Result;
 
 pub fn list() -> Result<()> {
     let path = Path::new("/home/abinash/.adof");
@@ -11,9 +11,10 @@ pub fn list() -> Result<()> {
 
 fn print_directory(path: &Path, prefix: &str) {
     if let Ok(entries) = fs::read_dir(path) {
-        let entries: Vec<_> = entries.filter_map(Result::ok)
-                                     .filter(|entry| entry.file_name() != ".git")
-                                     .collect();
+        let entries: Vec<_> = entries
+            .filter_map(Result::ok)
+            .filter(|entry| entry.file_name() != ".git")
+            .collect();
         let len = entries.len();
 
         for (i, entry) in entries.iter().enumerate() {
@@ -41,4 +42,3 @@ fn print_entry(path: &Path, prefix: &str, is_last: bool, is_dir: bool) {
 
     println!("{}{} {} {}", prefix, connector, icon, name);
 }
-

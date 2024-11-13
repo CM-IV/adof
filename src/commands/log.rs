@@ -1,6 +1,7 @@
-use anyhow::{Context, Result};
 use std::env;
 use std::process::Command;
+
+use anyhow::{Context, Result};
 
 use crate::git::{get_default_branch, is_remote_exist};
 use adof::get_adof_dir;
