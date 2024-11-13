@@ -1,6 +1,6 @@
 # ADOF - Automatic Dotfile Organizer Friend
 
-Managing dotfiles across multiple systems can be tedious, repetitive, and time-consuming. **adof** takes the complexity out of configuration management with a powerful, yet easy-to-use tool that tracks, manages, and deploys your dotfiles. Whether you’re a developer, sysadmin, or power user, adof helps you seamlessly keep your system configurations in sync, making your setup truly portable and shareable. With git integration, customizable tracking, and a deploy feature, *adof* is your ultimate companion for maintaining and sharing configurations with ease.
+Adof helps you seamlessly keep your system configurations in sync, making your setup truly portable and shareable. With git integration, customizable tracking, and a deploy feature, *adof* is your ultimate companion for maintaining and sharing configurations with ease.
 
 ---
 
@@ -32,54 +32,52 @@ cargo install --path adof/
 ## Commands and Usage
 
 ### `init`
-- **Description**: Initializes tracking of dotfiles. Finds files based on patterns and displays them with `fzf` for easy selection.
-- **Usage**: `adof init`
-- **Benefit**: Quickly set up tracking of multiple files with interactive selection.
+- When you run `adof init` quickly, open the `fzf` window and list the files that match a specific pattern(you can improve the pattern by checking out [pattern.rs](https://github.com/fnabinash/adof/blob/main/src/commands/patterns.rs) and make a PR), then use the `tab` to select multiple files and when ready hit enter.
+- Adof will create backup files of all the files you have selected in `.adof/` dir.
+- Adof automatically stage the file and commit the changes.
+- If you think that the pattern can not cover all the files you want to track do not worry, for this scenario adof `add` command.
 
 ### `add`
-- **Description**: Add additional files for tracking that may not match patterns.
-- **Usage**: `adof add`
-- **Benefit**: Easily include overlooked files for complete configuration coverage.
+- By running `adof add` you can add any files you want to keep track of and back of.
+- It also opens a `fzf` window, and you can use `tab` to select multiple files.
 
 ### `remove`
-- **Description**: Remove files from tracking.
-- **Usage**: `adof remove`
-- **Benefit**: Clean up your tracking list by removing unnecessary files.
+- If you accidentally added a file that you do not want to keep track of, you can remove it using `adof remove` command.
+- It list all the files that you are keeping track of and show them in `fzf` window and you can use `tab` to select file that you want to remove.
+- It will remove the files, stage the changes and commit it.
 
 ### `link <repo-url>`
-- **Description**: Link a GitHub repository to store backups and track changes.
-- **Usage**: `adof link https://github.com/yourusername/dotfiles`
-- **Benefit**: Centralize your configuration management in a GitHub repo for easy access and sharing.
+- If you are a tech influence most likely, your followers always ask you for your dotfiles. For that reason, I made the link command which takes a GitHub URL and links the local repo to the remote.
+- It will auto-generate a README for you with instruction to copy the file to their local system with just one command.
+- They like your ditfile, install Adof and just run one command and boom they have the exam files in the correct place in just a second.
 
 ### `unlink`
-- **Description**: Remove the linked GitHub repository.
-- **Usage**: `adof unlink`
-- **Benefit**: Manage your repository connections easily.
+- `adof unlink` does what it said, it unlinks the remote repo with your local repo.
 
 ### `push`
-- **Description**: Push tracked dotfiles to the linked GitHub repository.
-- **Usage**: `adof push`
-- **Benefit**: Sync changes manually to GitHub, ensuring backups are updated when needed.
+- You do not have to manually go to the `.adof` dir and run `git push` to push the changes to GitHub, you can run `adof push` where ever you are in your terminal.
+- If you have already set the credentials then it will push the changes if not it going to ask for the creds.
 
 ### `update`
-- **Description**: Manually update changes from original files to backups.
-- **Usage**: `adof update`
-- **Benefit**: Keep your backup files current with minimal effort.
+- This command does what it is named for, it updates the changes.
+- At anywhere in your terminal, just run the `adof update` it will fetch the changes in the files you are keeping track of and make the changes, stage those and commit it.
+- Also it has a flag `adof update --check` or `adof update -c`, sometimes you just want to check the files that have changes to make, then run any of these commands it will list all the files that have changes but not backed up but it does not update the changes. To update, you have to run `adof update`.
+- In future, I have plans to make `auto-update` command which periodically checks for changes if there are any changes it automatically backs up the changes.
 
 ### `deploy <repo-url>`
-- **Description**: Deploy dotfiles from any GitHub URL to your system.
-- **Usage**: `adof deploy https://github.com/username/dotfiles`
-- **Benefit**: Quickly set up new systems with configuration files from GitHub.
+- Deploy is the most interesting command of Adof.
+- It helps you copy any config from the internet that is made using Adof.
+- It has two parameters, one is a GitHub URL and the other is a commit hash.
+- If you run `adof deploy giithu-rul -c commit-id`, then it will copy all the files from that GitHub repo from that commit id and places it where it is meant to be.
+- If you run `adof deploy github-url` then it does the same thing but from the latest commit.
+- If you run `adof deploy -c commit-id` it looks for the commit in your local repo and copies the file from that instance to the actual file location. For example, if you made some changes to your config and then realise you do not like it then you can run `adof log` to list all the commits and copy the commit id then run the `adof deploy -c ccommit-id` then your file is set to that instance.
+- If you run `adof deploy` it deploys the latest commit instance from your local repo.
 
 ### `uninstall`
-- **Description**: Uninstall *adof* and remove all configurations.
-- **Usage**: `adof uninstall`
-- **Benefit**: Clean removal of all traces if you no longer need *adof*.
+- It uninstalls Adof from your system completely.
 
 ### `log`
-- **Description**: View a log of all changes, with support for filtering by date and time.
-- **Usage**: `adof log`
-- **Benefit**: Track history for better visibility into file changes and management.
+- 
 
 ---
 
