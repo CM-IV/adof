@@ -11,7 +11,6 @@ use sha2::{Digest, Sha256};
 use crate::database::{get_database_path, get_table_struct};
 
 pub mod add;
-pub mod auto_update;
 pub mod deploy;
 pub mod init;
 pub mod link;
@@ -108,9 +107,4 @@ fn is_file_backedup(original_file: &str) -> Result<bool> {
 fn check_for_init() -> Result<bool> {
     let database_path = get_database_path();
     fs::exists(&database_path).context("Failed to check if the adof is already initialized")
-}
-
-fn get_pid_file() -> String {
-    let adof_dir = adof::get_adof_dir();
-    format!("{}/do_not_touch/pid.txt", adof_dir)
 }

@@ -6,16 +6,6 @@ use std::process::Command;
 
 pub fn uninstall() -> Result<()> {
     let adof_dir = get_adof_dir();
-    let pid_file = format!("{}/do_not_touch/pid.txt", adof_dir);
-
-    if fs::exists(&pid_file).context("Checking if PID file exists")? {
-        let pid =
-            fs::read_to_string(&pid_file).context("Reading PID file for process termination")?;
-        Command::new("kill")
-            .arg(pid.trim())
-            .output()
-            .context("Killing the process")?;
-    }
 
     let home_dir = get_home_dir();
     let dotfile_readme_dir = format!("{}/dotfiles_readme", home_dir);

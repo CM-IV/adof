@@ -48,13 +48,6 @@ enum Commands {
         check: bool,
     },
 
-    /// Automatically update files at a set interval
-    AutoUpdate {
-        /// The frequency of automatic updates in minutes
-        #[arg(default_value = "60")]
-        min: u64,
-    },
-
     /// Display logs of the latest changes
     Log {
         /// Show the latest changes up to the specified number
@@ -122,11 +115,6 @@ async fn main() -> Result<()> {
 
         Commands::Update { check } => {
             update::update(*check)?;
-        }
-
-        Commands::AutoUpdate { min } => {
-            validate::auto_update_time(*min)?;
-            auto_update::auto_update(*min).await?;
         }
 
         Commands::Log { num, remote } => {
