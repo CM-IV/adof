@@ -21,7 +21,11 @@ pub fn log(num: u8, remote: bool) -> Result<()> {
     Ok(())
 }
 
-fn show_local_commits(num: u8) -> Result<()> {
+fn show_local_commits(mut num: u8) -> Result<()> {
+    if num == 0 {
+        num = 5;
+    }
+
     let adof_dir = get_adof_dir();
     env::set_current_dir(&adof_dir).context("Failed to change directory to adof dir")?;
 
