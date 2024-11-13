@@ -1,18 +1,18 @@
 # ADOF - Automatic Dotfile Organizer Friend
 
-Adof helps you seamlessly keep your system configurations in sync, making your setup truly portable and shareable. With git integration, customizable tracking, and a deploy feature, *adof* is your ultimate companion for maintaining and sharing configurations with ease.
+Adof helps you seamlessly keep your system configurations in sync, making your setup truly portable and shareable. With git integration, customizable tracking, and a deployed feature, *Adof* is your ultimate companion for maintaining and sharing configurations with ease.
 
 ---
 
 ## About Our Organization
 
-We’re building a community-driven organization to create powerful, open-source tools that solve real-world problems in the developer and systems management space. By supporting us, you’ll help bring more innovative projects like *adof* to life. With your sponsorship, we can continue delivering impactful tools and expanding the capabilities of our projects to meet the evolving needs of our users. We invite you to become a sponsor and join us on this journey!
+We’re building a community-driven organization to create powerful, open-source tools that solve real-world problems in the developer and systems management space. By supporting us, you’ll help bring more innovative projects like *Adof* to life. With your sponsorship, we can continue delivering impactful tools and expanding the capabilities of our projects to meet the evolving needs of our users. We invite you to become a sponsor and join us on this journey!
 
 ## Installation
 
 ### Install from crates.io
 
-Install *adof* using Cargo from crates.io:
+Install *Adof* using Cargo from crates.io:
 
 ```bash
 cargo install adof
@@ -68,25 +68,30 @@ cargo install --path adof/
 - Deploy is the most interesting command of Adof.
 - It helps you copy any config from the internet that is made using Adof.
 - It has two parameters, one is a GitHub URL and the other is a commit hash.
-- If you run `adof deploy giithu-rul -c commit-id`, then it will copy all the files from that GitHub repo from that commit id and places it where it is meant to be.
-- If you run `adof deploy github-url` then it does the same thing but from the latest commit.
-- If you run `adof deploy -c commit-id` it looks for the commit in your local repo and copies the file from that instance to the actual file location. For example, if you made some changes to your config and then realise you do not like it then you can run `adof log` to list all the commits and copy the commit id then run the `adof deploy -c ccommit-id` then your file is set to that instance.
-- If you run `adof deploy` it deploys the latest commit instance from your local repo.
+- `adof deploy giithu-rul -c commit-id` - it will copy all the files from that GitHub repo from that commit id and place it where it is meant to be.
+- `adof deploy github-url` - it does the same thing but from the latest commit.
+- `adof deploy -c commit-id` - it looks for the commit in your local repo and copies the file from that instance to the actual file location. For example, if you made some changes to your config and then realise you do not like it then you can run `adof log` to list all the commits and copy the commit id then run the `adof deploy -c ccommit-id` then your file is set to that instance.
+- `adof deploy` - it deploys the latest commit instance from your local repo.
 
 ### `uninstall`
 - It uninstalls Adof from your system completely.
 
 ### `log`
-- 
+- It takes one flag and one parameter. The flag is `--remote` or `-r` and the parameter is `number less than 100`.
+- `log` command is used to list the git commit or logs in your `.adof` folder history.
+- `adof log` - It list all the commits that you have not pushed to remote means the changes that are present in your local repo but not in the remote repo. If your local and remote are up to date then it lists the last 5 comits.
+- `adof log [number]` - It lists the last [number] commits present in your local repo.
+- `adof log -r` or `adof log --remote` - It lists the last 5 commits from your remote repo, If you have not configured your remote repo with local then it will list the last 5 commits from your local repo.
+- `adof log -r [number]` or `adof log --remote [number]` - It lists the last [number] commits from your remote repo, if not configured then it lists from the local repo.
 
 ---
 
 ## Future Features
 
 - **Auto-update**: Set an interval for *adof* to regularly check for and sync changes automatically.
-- **Profile Management**: Maintain multiple profiles within one repository for different setups or environments.
+- **Profile Management**: Maintain multiple profiles within one repository for different setups or environments(like for work, personal, streaming etc).
 - **File Encryption**: Securely track and deploy sensitive files with encryption support.
-- **Portable Mode**: Optimize *adof* for cloud environments, using minimal resources and allowing temporary configuration deployments.
+- **Portable Mode**: Optimize *Adof* for cloud environments, using minimal resources and allowing temporary configuration deployments.
 
 ---
 
