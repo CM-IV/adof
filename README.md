@@ -3,6 +3,7 @@
 **Adof** helps you seamlessly keep your system configurations in sync, making your setup truly portable and shareable. With git integration, customizable tracking, and a deployed feature, *Adof* is your ultimate companion for maintaining and sharing configurations with ease.
 
 ---
+
 <p align="center"><img src="https://github.com/OxideOrg/.github/blob/main/images/oxide_logo_no_bg.png" width="15%"></p>
 
 <h1 align="center">Oxide Org.</h1>
@@ -18,6 +19,7 @@
 </p>
 
 <p align="center">We build fast, reliable and easy-to-use tools for developers.</p>
+
 ---
 
 ## Installation
