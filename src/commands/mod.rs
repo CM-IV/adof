@@ -20,7 +20,7 @@ pub mod patterns;
 pub mod push;
 pub mod readme;
 pub mod remove;
-pub mod summary;
+// pub mod summary;
 pub mod uninstall;
 pub mod unlink;
 pub mod update;

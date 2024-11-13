@@ -59,8 +59,8 @@ enum Commands {
         remote: bool,
     },
 
-    /// Get an overview of the current status of ADOF
-    Summary,
+    // Get an overview of the current status of ADOF
+    //Summary,
 
     /// Deploy files from a GitHub or local repository
     Deploy {
@@ -122,9 +122,9 @@ async fn main() -> Result<()> {
             log::log(*num, *remote)?;
         }
 
-        Commands::Summary => {
-            summary::summary();
-        }
+        // Commands::Summary => {
+           // summary::summary();
+        // }
 
         Commands::Deploy { link, commit } => {
             if !link.is_empty() {
