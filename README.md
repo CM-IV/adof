@@ -2,6 +2,17 @@
 
 **Adof** helps you seamlessly keep your system configurations in sync, making your setup truly portable and shareable. With git integration, customizable tracking, and a deployed feature, *Adof* is your ultimate companion for maintaining and sharing configurations with ease.
 
+<table>
+  <tr>
+    <td><img src="https://github.com/fnabinash/adof/blob/main/assets/adof-init.png" alt="adof init"/></td>
+    <td><img src="https://github.com/fnabinash/adof/blob/main/assets/commit-message.png" alt="commit message"/></td>
+  </tr>
+  <tr>
+    <td><img src="https://github.com/fnabinash/adof/blob/main/assets/adof-log.png" alt="adof log"/></td>
+    <td><img src="https://github.com/fnabinash/adof/blob/main/assets/adof-add.png" alt="adof add" /></td>
+  </tr>
+</table>
+
 ---
 
 <p align="center"><img src="https://github.com/OxideOrg/.github/blob/main/images/oxide_logo_no_bg.png" width="15%"></p>
