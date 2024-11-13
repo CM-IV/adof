@@ -1,12 +1,24 @@
-# ADOF - Automatic Dotfile Organizer Friend
+<h1 align="center">ADOF - Automatic Dotfile Organizer Friend</h1>
 
-Adof helps you seamlessly keep your system configurations in sync, making your setup truly portable and shareable. With git integration, customizable tracking, and a deployed feature, *Adof* is your ultimate companion for maintaining and sharing configurations with ease.
+**Adof** helps you seamlessly keep your system configurations in sync, making your setup truly portable and shareable. With git integration, customizable tracking, and a deployed feature, *Adof* is your ultimate companion for maintaining and sharing configurations with ease.
 
 ---
+<p align="center"><img src="https://github.com/OxideOrg/.github/blob/main/images/oxide_logo_no_bg.png" width="15%"></p>
 
-## About Our Organization
+<h1 align="center">Oxide Org.</h1>
 
-We’re building a community-driven organization to create powerful, open-source tools that solve real-world problems in the developer and systems management space. By supporting us, you’ll help bring more innovative projects like *Adof* to life. With your sponsorship, we can continue delivering impactful tools and expanding the capabilities of our projects to meet the evolving needs of our users. We invite you to become a sponsor and join us on this journey!
+<p align="center">
+  <a href="https://x.com/oxide_org" target="_blank">
+    <img src="https://img.shields.io/badge/OxideOrg-%23000000.svg?style=for-the-badge&logo=X&logoColor=white">
+  </a>
+
+  <a href="https://oxideorg.medium.com/" target="_blank">
+    <img src="https://img.shields.io/badge/Medium-%23000000?style=for-the-badge&logo=medium&logoColor=white">
+  </a>
+</p>
+
+<p align="center">We build fast, reliable and easy-to-use tools for developers.</p>
+---
 
 ## Installation
 
