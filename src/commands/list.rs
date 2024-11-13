@@ -1,46 +1,44 @@
-use anyhow::{Context, Result};
 use std::fs;
 use std::path::Path;
-
-use adof::get_adof_dir;
+use anyhow::Result;
 
 pub fn list() -> Result<()> {
-    let adof_dir = get_adof_dir();
-    let path = Path::new(&adof_dir);
+    let path = Path::new("/home/abinash/.adof");
     println!("Root 📦 {}", path.display());
-    print_directory(path, "")?;
+    print_directory(path, "");
     Ok(())
 }
 
-fn print_directory(path: &Path, prefix: &str) -> Result<()> {
-    let entries = fs::read_dir(path)
-        .context(format!("Failed to read directory: {}", path.display()))?
-        .collect::<Result<Vec<_>, _>>()
-        .context("Failed to collect directory entries")?;
+fn print_directory(path: &Path, prefix: &str) {
+    if let Ok(entries) = fs::read_dir(path) {
+        let entries: Vec<_> = entries.filter_map(Result::ok)
+                                     .filter(|entry| entry.file_name() != ".git")
+                                     .collect();
+        let len = entries.len();
 
-    let len = entries.len();
+        for (i, entry) in entries.iter().enumerate() {
+            let path = entry.path();
+            let is_last_entry = i == len - 1;
 
-    for (i, entry) in entries.iter().enumerate() {
-        let path = entry.path();
-        let is_last_entry = i == len - 1;
+            print_entry(&path, prefix, is_last_entry, path.is_dir());
 
-        if path.is_dir() {
-            if path.file_name().unwrap() == ".git" {
-                continue;
+            if path.is_dir() {
+                let new_prefix = if is_last_entry {
+                    format!("{}    ", prefix)
+                } else {
+                    format!("{}│   ", prefix)
+                };
+                print_directory(&path, &new_prefix);
             }
-
-            print_entry(&path, prefix, is_last_entry);
-            let new_prefix = format!("{}{}", prefix, if is_last_entry { "    " } else { "│   " });
-            print_directory(&path, &new_prefix)?;
-        } else if path.is_file() {
-            print_entry(&path, prefix, is_last_entry);
         }
     }
-    Ok(())
 }
 
-fn print_entry(path: &Path, prefix: &str, is_last: bool) {
+fn print_entry(path: &Path, prefix: &str, is_last: bool, is_dir: bool) {
+    let icon = if is_dir { "📂" } else { "📄" };
     let connector = if is_last { "└──" } else { "├──" };
     let name = path.file_name().unwrap().to_string_lossy();
-    println!("{}{} {}", prefix, connector, name);
+
+    println!("{}{} {} {}", prefix, connector, icon, name);
 }
+
