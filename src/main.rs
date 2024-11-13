@@ -112,7 +112,7 @@ async fn main() -> Result<()> {
         }
 
         Commands::Link { link } => {
-            validate::github_repo(link)?;
+            // validate::github_repo(link)?;
             link::link(link)?;
         }
 
@@ -139,7 +139,10 @@ async fn main() -> Result<()> {
         }
 
         Commands::Deploy { link, commit } => {
-            validate::github_repo(link)?;
+            if !link.is_empty() {
+                validate::github_repo(link)?;
+            }
+
             deploy::deploy(link, commit)?;
         }
 
