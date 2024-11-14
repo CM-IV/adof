@@ -68,6 +68,10 @@ cargo install --path adof/
 
 ## Commands and Usage
 
+### whatis
+- `adof whatis <command-name>` - If you do not know which command what does then you use the `whatis` command to get detailed info about any command.
+- For example `adof whatis init` give you detailed info about `init` command.
+
 ### `init`
 - When you run `adof init` quickly, open the `fzf` window and list the files that match a specific pattern(you can improve the pattern by checking out [pattern.rs](https://github.com/fnabinash/adof/blob/main/src/commands/patterns.rs) and make a PR), then use the `tab` to select multiple files and when ready hit enter.
 - Adof will create backup files of all the files you have selected in `.adof/` dir.
