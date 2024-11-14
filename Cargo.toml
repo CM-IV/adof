@@ -10,6 +10,7 @@ homepage = "https://github.com/fnabinash/adof"
 repository = "https://github.com/fnabinash/adof"
 keywords = ["config", "adof", "config-management", "vim", "neovim"]
 categories = ["command-line-utilities"]
+exclude = ["assets/"]
 
 [dependencies]
 clap = { version = "4.5.20", features = ["derive"] }
