@@ -7,6 +7,11 @@ use crate::database::remove::remove_files;
 use crate::git::add::git_add;
 
 pub fn remove() -> Result<()> {
+    if !check_for_init()? {
+        eprintln!("Adof is not initialized.");
+        std::process::exit(1);
+    }
+    
     let files_to_remove = get_files_to_remove()?;
 
     if files_to_remove.is_empty() {

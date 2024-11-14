@@ -10,16 +10,15 @@ use glob::glob;
 
 use adof::get_home_dir;
 
-use super::init::init;
 use crate::database::add::add_files;
 use crate::git::add::git_add;
 
 use super::*;
 
 pub async fn add() -> Result<()> {
-    if !check_for_init().context("Failed to check initialization status")? {
-        init().await?;
-        process::exit(1);
+    if !check_for_init()? {
+        eprintln!("Adof is not initialized.");
+        std::process::exit(1);
     }
 
     let files_to_add = get_files_to_add().context("Failed to retrieve files to add")?;

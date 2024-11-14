@@ -4,7 +4,14 @@ use std::fs;
 use std::path::Path;
 use std::process::Command;
 
+use crate::commands::check_for_init;
+
 pub fn uninstall() -> Result<()> {
+    if !check_for_init()? {
+        eprintln!("Adof is not initialized.");
+        std::process::exit(1);
+    }
+    
     let adof_dir = get_adof_dir();
 
     let home_dir = get_home_dir();

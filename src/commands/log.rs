@@ -6,7 +6,14 @@ use anyhow::{Context, Result};
 use crate::git::{get_default_branch, is_remote_exist};
 use adof::get_adof_dir;
 
+use super::check_for_init;
+
 pub fn log(num: u8, remote: bool) -> Result<()> {
+    if !check_for_init()? {
+        eprintln!("Adof is not initialized.");
+        std::process::exit(1);
+    }
+    
     if remote && is_remote_exist().context("Failed to check if remote exists")? {
         show_remote_commits(num)?;
     } else if num == 0 && is_remote_exist().context("Failed to check if remote exists")? {

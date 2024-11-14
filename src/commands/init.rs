@@ -19,7 +19,7 @@ use super::*;
 pub async fn init() -> Result<()> {
     if check_for_init()? {
         println!("Already initialized");
-        process::exit(1);
+        process::exit(0);
     }
 
     create_database().context("Failed to create database")?;

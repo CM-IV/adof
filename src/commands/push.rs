@@ -4,7 +4,14 @@ use std::process::Command;
 
 use adof::get_adof_dir;
 
+use super::check_for_init;
+
 pub fn push() -> Result<()> {
+    if !check_for_init()? {
+        eprintln!("Adof is not initialized.");
+        std::process::exit(1);
+    }
+    
     let adof_dir = get_adof_dir();
     env::set_current_dir(&adof_dir).context("Failed to change directory to adof dir")?;
 

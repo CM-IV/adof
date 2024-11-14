@@ -2,7 +2,14 @@ use anyhow::Result;
 use std::fs;
 use std::path::Path;
 
+use crate::commands::check_for_init;
+
 pub fn list() -> Result<()> {
+    if !check_for_init()? {
+        eprintln!("Adof is not initialized.");
+        std::process::exit(1);
+    }
+    
     let path = Path::new("/home/abinash/.adof");
     println!("Root 📦 {}", path.display());
     print_directory(path, "");
