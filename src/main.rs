@@ -11,7 +11,7 @@ use commands::*;
 
 #[derive(Parser, Debug)]
 #[command(name = "adof")]
-#[command(version = "v0.12.0")]
+#[command(version = "v1.0.0")]
 #[command(author = "Abinash S. <fnabinash@gmail.com>")]
 #[command(about = "ADOF - An Automatic Dot-files Organizer Friend", long_about = None)]
 struct Cli {

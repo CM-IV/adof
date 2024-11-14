@@ -1,5 +1,7 @@
 use git2::{BranchType, FetchOptions, RemoteCallbacks};
 
+use crate::commands::push::push;
+
 use super::*;
 
 pub fn link_remote(repo_link: &str) -> Result<()> {
@@ -7,6 +9,8 @@ pub fn link_remote(repo_link: &str) -> Result<()> {
 
     repo.remote("origin", repo_link)
         .expect("Failed to add remote");
+
+    push()?;
 
     let branch_name = "main";
     let mut config = repo.config().context("Failed to get config")?;
