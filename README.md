@@ -47,6 +47,19 @@ If you have some suggestions or need more info please share them with me on Twit
 
 ---
 
+## Comparison
+
+| Feature                  | adof                                    | GNU Stow | Homeshick | chezmoi   |
+|--------------------------|-----------------------------------------|----------|-----------|-----------|
+| **Pattern-based Tracking**    | Yes (fzf for selection)               | No       | No        | No        |
+| **Commit Message Customization** | Yes                              | No       | No        | Limited   |
+| **Cloud Portability**         | Planned                              | No       | No        | No        |
+| **README Generation**         | Yes                                   | No       | No        | No        |
+| **File Encryption**           | Planned                              | No       | No        | Yes       |
+| **Deploy from GitHub URL**    | Yes                                   | No       | No        | Yes       |
+| **Auto Update with Time Limits** | Planned                            | No       | No        | No        |
+| **Profiling Support**         | Planned                              | No       | No        | Limited   |
+
 ## Installation
 
 ### Install from crates.io
