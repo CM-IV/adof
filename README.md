@@ -4,6 +4,8 @@
 
 > **For demo checkout this repo -> https://github.com/fnabinash/test-adof.git**
 
+**Note:- You have to have `fzf` installed on your system.**
+
 <table>
   <tr>
     <td><img src="https://github.com/fnabinash/adof/blob/main/assets/adof-init.png" alt="adof init"/></td>
