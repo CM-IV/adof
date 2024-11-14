@@ -30,4 +30,3 @@ mod tests {
         assert_eq!(adof_dir, "/test/home/.adof");
     }
 }
-

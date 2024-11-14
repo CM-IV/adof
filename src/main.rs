@@ -61,7 +61,6 @@ enum Commands {
 
     // Get an overview of the current status of ADOF
     //Summary,
-
     /// Deploy files from a GitHub or local repository
     Deploy {
         /// The GitHub repository URL to deploy from
@@ -123,9 +122,8 @@ async fn main() -> Result<()> {
         }
 
         // Commands::Summary => {
-           // summary::summary();
+        // summary::summary();
         // }
-
         Commands::Deploy { link, commit } => {
             if !link.is_empty() {
                 validate::github_repo(link).await?;

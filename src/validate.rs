@@ -69,7 +69,6 @@ pub fn log_counts(num: u8) -> Result<()> {
     Ok(())
 }
 
-
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -92,7 +91,11 @@ mod tests {
     async fn test_github_repo() {
         assert!(github_repo("github").await.is_err());
         assert!(github_repo("github.com").await.is_err());
-        assert!(github_repo("https://github.com/fnabinash/adof.gi").await.is_err());
-        assert!(github_repo("https://github.com/fnabinash/adof.git").await.is_ok());
+        assert!(github_repo("https://github.com/fnabinash/adof.gi")
+            .await
+            .is_err());
+        assert!(github_repo("https://github.com/fnabinash/adof.git")
+            .await
+            .is_ok());
     }
 }
