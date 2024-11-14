@@ -11,7 +11,7 @@ pub fn uninstall() -> Result<()> {
         eprintln!("Adof is not initialized.");
         std::process::exit(1);
     }
-    
+
     let adof_dir = get_adof_dir();
 
     let home_dir = get_home_dir();

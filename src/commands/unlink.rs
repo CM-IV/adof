@@ -8,7 +8,7 @@ pub fn unlink() -> Result<()> {
         eprintln!("Adof is not initialized.");
         std::process::exit(1);
     }
-    
+
     if is_remote_exist().context("Checking if remote exists")? {
         unlink_remote()?;
         println!("You have successfully removed the remote branch.");

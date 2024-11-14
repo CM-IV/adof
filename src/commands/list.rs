@@ -9,7 +9,7 @@ pub fn list() -> Result<()> {
         eprintln!("Adof is not initialized.");
         std::process::exit(1);
     }
-    
+
     let path = Path::new("/home/abinash/.adof");
     println!("Root 📦 {}", path.display());
     print_directory(path, "");

@@ -1,4 +1,7 @@
-use crate::{commands::check_for_init, git::{is_remote_exist, remote::link_remote}};
+use crate::{
+    commands::check_for_init,
+    git::{is_remote_exist, remote::link_remote},
+};
 use anyhow::{Context, Result};
 
 pub fn link(repo_link: &str) -> Result<()> {
@@ -6,7 +9,7 @@ pub fn link(repo_link: &str) -> Result<()> {
         eprintln!("Adof is not initialized.");
         std::process::exit(1);
     }
-    
+
     if is_remote_exist().context("Failed to check if remote exists")? {
         println!("Remote branch is already configured.");
         std::process::exit(1);

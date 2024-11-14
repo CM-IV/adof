@@ -13,7 +13,7 @@ pub fn log(num: u8, remote: bool) -> Result<()> {
         eprintln!("Adof is not initialized.");
         std::process::exit(1);
     }
-    
+
     if remote && is_remote_exist().context("Failed to check if remote exists")? {
         show_remote_commits(num)?;
     } else if num == 0 && is_remote_exist().context("Failed to check if remote exists")? {

@@ -11,7 +11,7 @@ pub fn remove() -> Result<()> {
         eprintln!("Adof is not initialized.");
         std::process::exit(1);
     }
-    
+
     let files_to_remove = get_files_to_remove()?;
 
     if files_to_remove.is_empty() {

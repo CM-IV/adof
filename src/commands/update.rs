@@ -10,7 +10,7 @@ pub fn update(check: bool) -> Result<()> {
         eprintln!("Adof is not initialized.");
         std::process::exit(1);
     }
-    
+
     let mut files_to_update: Vec<(String, String)> = Vec::new();
 
     let table_struct = get_table_struct()?;
