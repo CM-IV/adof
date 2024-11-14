@@ -5,6 +5,7 @@ pub mod commands;
 pub mod database;
 pub mod git;
 pub mod validate;
+pub mod what_is;
 
 use commands::*;
 
@@ -20,6 +21,13 @@ struct Cli {
 
 #[derive(Subcommand, Debug)]
 enum Commands {
+    /// Get detailed info about any command
+    Whatis {
+        /// Enter a command
+        #[arg(default_value = "")]
+        command: String,
+    },
+
     /// Initialize Adof in your system
     Init,
 
@@ -87,6 +95,10 @@ async fn main() -> Result<()> {
     let cli = Cli::parse();
 
     match &cli.command {
+        Commands::Whatis { command } => {
+            what_is::what_is(command);
+        }
+
         Commands::Init => {
             init::init().await?;
         }
